@@ -68,6 +68,17 @@
 
     .heart { position: absolute; bottom: -20px; font-size: 20px; animation: floatUp 5s linear infinite; opacity: 0.7; }
     @keyframes floatUp { from { transform: translateY(0) scale(1); opacity: 0.7; } to { transform: translateY(-110vh) scale(1.6); opacity: 0; } }
+
+    /* Tap rapido grid */
+    #tapGrid {
+      position: relative;
+      width: 100%;
+      height: 200px;
+      margin: 1rem 0;
+      border: 2px dashed #6a11cb;
+      border-radius: 16px;
+      overflow: hidden;
+    }
   </style>
 </head>
 <body>
@@ -108,7 +119,7 @@
   <!-- LIVELLO 4: memory semplice -->
   <div class="card hidden" id="lvl4">
     <h1>🃏 Livello 3</h1>
-    <p>Scegli il colore corispondente alla scritta</p>
+    <p>Scegli il colore corrispondente alla scritta</p>
     <div class="choices">
       <button style="background:#ff6a88;" onclick="memoryRight()">Rosa</button>
       <button style="background:#6a11cb;" onclick="memoryWrong()">Verde</button>
@@ -162,7 +173,14 @@
       const parent = dot.parentElement.getBoundingClientRect();
       const x = rect.left - parent.left + 11;
       const y = rect.top - parent.top + 11;
-      if (lastPos) { ctx.beginPath(); ctx.moveTo(lastPos.x,lastPos.y); ctx.lineTo(x,y); ctx.strokeStyle='#ff6a88'; ctx.lineWidth=4; ctx.stroke(); }
+      if (lastPos) { 
+        ctx.beginPath();
+        ctx.moveTo(lastPos.x,lastPos.y);
+        ctx.lineTo(x,y);
+        ctx.strokeStyle='#ff6a88';
+        ctx.lineWidth=4;
+        ctx.stroke(); 
+      }
       lastPos = {x,y};
       currentDot++;
       if(currentDot===4){setTimeout(()=>goTo('lvl2','lvl3'),600);}
@@ -170,27 +188,73 @@
 
     /* Matematica */
     function mathWrong(){ document.getElementById('mathMsg').textContent='Mh… riprova, so che puoi 😏'; }
-    function mathRight(){ document.getElementById('mathMsg').textContent='Perfetto! Sapevo che ce l’avevi 😎'; setTimeout(()=>goTo('lvl3','lvl4'),900); }
+    function mathRight(){ 
+      document.getElementById('mathMsg').textContent='Perfetto! Sapevo che ce l’avevi 😎'; 
+      setTimeout(()=>goTo('lvl3','lvl4'),900); 
+    }
 
     /* Memory */
     function memoryWrong(){ document.getElementById('memoryMsg').textContent='Oops! Ricorda meglio 😅'; }
-    function memoryRight(){ document.getElementById('memoryMsg').textContent='Bravo! 💪'; setTimeout(()=>goTo('lvl4','lvl5'),800); }
+    function memoryRight(){ 
+      document.getElementById('memoryMsg').textContent='Bravo! 💪'; 
+      setTimeout(()=>goTo('lvl4','lvl5'),800); 
+    }
 
-    /* Cuore che scappa */
-    const heartBtn = document.getElementById('movingHeart');
-    heartBtn.style.position='relative';
-    heartBtn.style.transition='all 0.3s';
-    heartBtn.addEventListener('mouseover',()=>{
-      heartBtn.style.top=(Math.random()*100-50)+'px';
-      heartBtn.style.left=(Math.random()*100-50)+'px';
+    /* Tap rapido (lvl5) */
+    function startTapGame() {
+      const grid = document.getElementById('tapGrid');
+      const scoreDisplay = document.getElementById('tapScore');
+      grid.innerHTML = '';
+      scoreDisplay.textContent = '';
+      let heartsClicked = 0;
+      const totalHearts = 10;
+
+      for(let i=0;i<totalHearts;i++){
+        const heart = document.createElement('button');
+        heart.textContent = '💖';
+        heart.style.position = 'absolute';
+        heart.style.top = Math.random()*160 + 'px';
+        heart.style.left = Math.random()*320 + 'px';
+        heart.style.fontSize = '2rem';
+        heart.style.border = 'none';
+        heart.style.background = 'transparent';
+        heart.style.cursor = 'pointer';
+        heart.addEventListener('click',()=>{
+          heartsClicked++;
+          heart.remove();
+          scoreDisplay.textContent = `Cuori cliccati: ${heartsClicked}`;
+        });
+        grid.appendChild(heart);
+      }
+
+      setTimeout(()=>{
+        scoreDisplay.textContent = `Hai cliccato ${heartsClicked} cuori!`;
+        if(heartsClicked >=5){
+          scoreDisplay.textContent += ' 🎉 Bene! Passiamo al prossimo livello.';
+          setTimeout(()=>goTo('lvl5','lvl6'),1000);
+        } else {
+          scoreDisplay.textContent += ' 😅 Prova ancora!';
+          setTimeout(()=>startTapGame(),1500);
+        }
+      },10000);
+    }
+
+    /* Lancia il gioco quando lvl5 diventa visibile */
+    const lvl5 = document.getElementById('lvl5');
+    const observer = new MutationObserver(mutations=>{
+      mutations.forEach(m=>{
+        if(m.target.id==='lvl5' && !lvl5.classList.contains('hidden')){
+          startTapGame();
+        }
+      });
     });
-    function heartClicked(){ goTo('lvl5','lvl6'); }
+    observer.observe(lvl5,{attributes:true,attributeFilter:['class']});
 
     /* Scelta simpatica */
     function choiceWrong(){ alert('Mh… prova ancora 😏'); }
     function choiceRight(){ goTo('lvl6','lvl7'); spawnHearts(30); }
 
-    /* Cuoricini */
+    /* Cuoricini finale */
     function spawnHearts(n){
       for(let i=0;i<n;i++){
         const heart=document.createElement('div');
@@ -203,6 +267,10 @@
       }
     }
   </script>
+
+</body>
+</html>
+
 
 </body>
 </html>
