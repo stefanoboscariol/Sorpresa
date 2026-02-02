@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>BUON COMPLEANNO BELLA!!✨</title>
+  <title>TANTI AUGURI FLA✨</title>
   <style>
     * { box-sizing: border-box; }
     body {
@@ -74,7 +74,7 @@
 
   <!-- LIVELLO 1 -->
   <div class="card" id="lvl1">
-    <h1>👋Ciao Flavietta</h1>
+    <h1>👋Ciao Flavietta!</h1>
     <p>Questa è una piccola sorpresa…<br>ma per arrivare in fondo dovrai <b>guadagnartela</b> 😉</p>
     <button onclick="goTo('lvl1','lvl2')">Iniziamo 🎮</button>
   </div>
@@ -108,20 +108,22 @@
   <!-- LIVELLO 4: memory semplice -->
   <div class="card hidden" id="lvl4">
     <h1>🃏 Livello 3</h1>
-    <p>Memorizza il colore giusto e clicca quello corrispondente</p>
+    <p>Scegli il colore corispondente alla scritta</p>
     <div class="choices">
       <button style="background:#ff6a88;" onclick="memoryRight()">Rosa</button>
       <button style="background:#6a11cb;" onclick="memoryWrong()">Verde</button>
-      <button style="background:#2575fc;" onclick="memoryWrong()">Nero</button>
+      <button style="background:#2575fc;" onclick="memoryWrong()">Bianco</button>
     </div>
     <p id="memoryMsg"></p>
   </div>
 
-  <!-- LIVELLO 5: clicca il cuore che scappa -->
+  <!-- LIVELLO 5: tap rapido -->
   <div class="card hidden" id="lvl5">
-    <h1>💘 Livello 4</h1>
-    <p>Clicca il cuore che scappa! 😜</p>
-    <button id="movingHeart" onclick="heartClicked()">💖</button>
+    <h1>⚡ Livello 4</h1>
+    <p>Tocca tutti i cuori che si accendono! 💖</p>
+    <p><small>Hai <b>10 secondi</b> per trovarne almeno <b>5</b>!</small></p>
+    <div class="tap-grid" id="tapGrid"></div>
+    <p id="tapScore"></p>
   </div>
 
   <!-- LIVELLO 6: scelta simpatica -->
