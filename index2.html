@@ -19,7 +19,7 @@
     }
 
     .card {
-      background: #f0f8ff; /* carta chiara azzurra */
+      background: #f0f8ff;
       padding: 2.5rem 2rem;
       border-radius: 24px;
       box-shadow: 0 20px 40px rgba(0,0,0,0.2);
@@ -29,12 +29,9 @@
       animation: pop 0.6s ease-out;
     }
 
-    @keyframes pop {
-      from { transform: scale(0.85); opacity: 0; }
-      to   { transform: scale(1); opacity: 1; }
-    }
+    @keyframes pop { from { transform: scale(0.85); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
-    h1 { font-size: 1.9rem; margin-bottom: 1rem; color: #2575fc; } 
+    h1 { font-size: 1.9rem; margin-bottom: 1rem; color: #2575fc; }
     p  { font-size: 1.05rem; line-height: 1.5; margin-bottom: 1rem; }
 
     button {
@@ -56,44 +53,19 @@
     }
 
     .hidden { display: none; }
-    .choices button {
-      margin: 0.35rem;
-      padding: 0.6rem 1.1rem;
-      font-size: 0.95rem;
-    }
+    .choices button { margin: 0.35rem; padding: 0.6rem 1.1rem; font-size: 0.95rem; }
 
     .dots { position: relative; height: 180px; margin: 1rem 0; }
     .dot { width: 22px; height: 22px; background: #2575fc; border-radius: 50%; position: absolute; cursor: pointer; }
     canvas { position: absolute; top:0; left:0; }
 
-    /* Tap rapido grid */
-    #tapGrid {
-      position: relative;
-      width: 100%;
-      height: 200px;
-      margin: 1rem 0;
-      border: 2px dashed #2575fc;
-      border-radius: 16px;
-      overflow: hidden;
-    }
+    .lightning { position: absolute; font-size: 2rem; animation: fall 2s linear infinite; opacity: 0.8; }
+    @keyframes fall { from { transform: translateY(-50px) scale(1); } to { transform: translateY(250px) scale(1); } }
 
-    .timer { font-weight: bold; margin-bottom: 0.5rem; color:#ff4444; }
+    .heart, .emoji { position: absolute; font-size: 24px; animation: floatUp 5s linear infinite; opacity: 0.7; }
+    @keyframes floatUp { from { transform: translateY(0) scale(1); opacity: 0.7; } to { transform: translateY(-110vh) scale(1.3); opacity: 0; } }
 
-    .heart { position: absolute; bottom: -20px; font-size: 20px; animation: floatUp 5s linear infinite; opacity: 0.7; }
-    @keyframes floatUp { from { transform: translateY(0) scale(1); opacity: 0.7; } to { transform: translateY(-110vh) scale(1.6); opacity: 0; } }
-
-    /* Fulmini pagina finale */
-    .lightning {
-      position: absolute;
-      font-size: 2rem;
-      color: #ffff33;
-      top: -50px;
-      animation: fall 2s linear infinite;
-    }
-    @keyframes fall {
-      from { transform: translateY(-50px) rotate(0deg); }
-      to { transform: translateY(110vh) rotate(20deg); }
-    }
+    #tapGrid { position: relative; width: 100%; height: 200px; margin: 1rem 0; border: 2px dashed #2575fc; border-radius: 16px; overflow: hidden; }
   </style>
 </head>
 <body>
@@ -131,32 +103,18 @@
     <p id="mathMsg"></p>
   </div>
 
-  <!-- LIVELLO 4: memory semplice -->
+  <!-- LIVELLO 4: tap rapido fulmini -->
   <div class="card hidden" id="lvl4">
-    <h1>🃏 Livello 3</h1>
-    <p>Scegli il colore corrispondente alla scritta</p>
-    <div class="choices">
-      <button style="background:#ff6a88;" onclick="memoryRight()">Rosa</button>
-      <button style="background:#6a11cb;" onclick="memoryWrong()">Verde</button>
-      <button style="background:#2575fc;" onclick="memoryWrong()">Bianco</button>
-    </div>
-    <p class="timer" id="memoryTimer">Tempo rimasto: 10s</p>
-    <p id="memoryMsg"></p>
-  </div>
-
-  <!-- LIVELLO 5: tap rapido -->
-  <div class="card hidden" id="lvl5">
-    <h1>⚡ Livello 4</h1>
-    <p>Tocca tutti i fulmini che si accendono! ⚡</p>
+    <h1>⚡ Livello 3</h1>
+    <p>Tocca tutti i fulmini che appaiono! ⚡</p>
     <p><small>Hai <b>10 secondi</b> per trovarne almeno <b>3</b>!</small></p>
-    <div class="tap-grid" id="tapGrid"></div>
-    <p class="timer" id="tapTimer">Tempo rimasto: 10s</p>
+    <div id="tapGrid"></div>
     <p id="tapScore"></p>
   </div>
 
-  <!-- LIVELLO 6: scelta simpatica -->
-  <div class="card hidden" id="lvl6">
-    <h1>😎 Livello 5</h1>
+  <!-- LIVELLO 5: scelta simpatica -->
+  <div class="card hidden" id="lvl5">
+    <h1>😎 Livello 4</h1>
     <p>Scegli una risposta per continuare:</p>
     <div class="choices">
       <button onclick="choiceWrong()">Non so 🤔</button>
@@ -164,41 +122,33 @@
     </div>
   </div>
 
-  <!-- LIVELLO 7: messaggio finale auguri -->
-  <div class="card hidden" id="lvl7">
+  <!-- LIVELLO 6: messaggio finale -->
+  <div class="card hidden" id="lvl6">
     <h1>🎉 Auguri!</h1>
     <p>Hai superato tutti i livelli! 🏆<br>Sei fantastica e meriti tutto il meglio 🌟💙🫶🏻</p>
-    <button onclick="spawnFinalEffects()">Effetti finali ✨</button>
+    <button onclick="spawnFinalElements()">🎆 Guarda! 🎆</button>
   </div>
 
   <script>
-    /* Navigazione */
-    function goTo(from, to) {
+    function goTo(from,to){
       document.getElementById(from).classList.add('hidden');
       document.getElementById(to).classList.remove('hidden');
     }
 
     /* Puntini */
-    let currentDot = 1;
-    const canvas = document.getElementById('lineCanvas');
-    const ctx = canvas.getContext('2d');
-    let lastPos = null;
-    function hitDot(n) {
-      if (n !== currentDot) return;
-      const dot = event.target;
-      const rect = dot.getBoundingClientRect();
-      const parent = dot.parentElement.getBoundingClientRect();
-      const x = rect.left - parent.left + 11;
-      const y = rect.top - parent.top + 11;
-      if (lastPos) { 
-        ctx.beginPath();
-        ctx.moveTo(lastPos.x,lastPos.y);
-        ctx.lineTo(x,y);
-        ctx.strokeStyle='#2575fc';
-        ctx.lineWidth=4;
-        ctx.stroke(); 
-      }
-      lastPos = {x,y};
+    let currentDot=1;
+    const canvas=document.getElementById('lineCanvas');
+    const ctx=canvas.getContext('2d');
+    let lastPos=null;
+    function hitDot(n){
+      if(n!==currentDot) return;
+      const dot=event.target;
+      const rect=dot.getBoundingClientRect();
+      const parent=dot.parentElement.getBoundingClientRect();
+      const x=rect.left-parent.left+11;
+      const y=rect.top-parent.top+11;
+      if(lastPos){ ctx.beginPath(); ctx.moveTo(lastPos.x,lastPos.y); ctx.lineTo(x,y); ctx.strokeStyle='#2575fc'; ctx.lineWidth=4; ctx.stroke(); }
+      lastPos={x,y};
       currentDot++;
       if(currentDot===4){setTimeout(()=>goTo('lvl2','lvl3'),600);}
     }
@@ -210,110 +160,89 @@
       setTimeout(()=>goTo('lvl3','lvl4'),900); 
     }
 
-    /* Memory */
-    function memoryWrong(){ document.getElementById('memoryMsg').textContent='Oops! Ricorda meglio 😅'; }
-    function memoryRight(){ 
-      document.getElementById('memoryMsg').textContent='Bravo! 💪'; 
-      setTimeout(()=>goTo('lvl4','lvl5'),800); 
-    }
+    /* Tap rapido fulmini - livello 4 */
+    function startTapGame(){
+      const grid=document.getElementById('tapGrid');
+      const scoreDisplay=document.getElementById('tapScore');
+      grid.innerHTML='';
+      scoreDisplay.textContent='';
+      let hits=0;
+      const total=8;
+      let timeout;
 
-    /* Timer livello 4 memory/tap */
-    function startMemoryTimer() {
-      let time = 10;
-      const timerEl = document.getElementById('memoryTimer');
-      const interval = setInterval(()=>{
-        time--;
-        timerEl.textContent = `Tempo rimasto: ${time}s`;
-        if(time<=0){
-          clearInterval(interval);
-          timerEl.textContent = 'Tempo scaduto! 😅';
-          setTimeout(()=>goTo('lvl4','lvl5'),1000);
-        }
-      },1000);
-    }
-    const lvl4 = document.getElementById('lvl4');
-    const observer4 = new MutationObserver(()=>{ startMemoryTimer(); });
-    observer4.observe(lvl4,{attributes:true,attributeFilter:['class']});
-
-    /* Tap rapido livello 5 */
-    function startTapGame() {
-      const grid = document.getElementById('tapGrid');
-      const scoreDisplay = document.getElementById('tapScore');
-      const timerEl = document.getElementById('tapTimer');
-      grid.innerHTML = '';
-      scoreDisplay.textContent = '';
-      let heartsClicked = 0;
-      const totalHearts = 8;
-
-      for(let i=0;i<totalHearts;i++){
-        const bolt = document.createElement('button');
-        bolt.textContent = '⚡';
-        bolt.style.position = 'absolute';
-        bolt.style.top = Math.random()*160 + 'px';
-        bolt.style.left = Math.random()*320 + 'px';
-        bolt.style.fontSize = '2rem';
-        bolt.style.border = 'none';
-        bolt.style.background = 'transparent';
-        bolt.style.cursor = 'pointer';
+      for(let i=0;i<total;i++){
+        const bolt=document.createElement('button');
+        bolt.textContent='⚡';
+        bolt.style.position='absolute';
+        bolt.style.top=Math.random()*160+'px';
+        bolt.style.left=Math.random()*320+'px';
+        bolt.style.fontSize='2rem';
+        bolt.style.border='none';
+        bolt.style.background='transparent';
+        bolt.style.cursor='pointer';
         bolt.addEventListener('click',()=>{
-          heartsClicked++;
+          hits++;
           bolt.remove();
-          scoreDisplay.textContent = `Fulmini cliccati: ${heartsClicked}`;
+          scoreDisplay.textContent=`Fulmini cliccati: ${hits}`;
         });
         grid.appendChild(bolt);
       }
 
-      let time = 10;
-      const interval = setInterval(()=>{
-        time--;
-        timerEl.textContent = `Tempo rimasto: ${time}s`;
-        if(time<=0){
-          clearInterval(interval);
-          scoreDisplay.textContent = `Tempo scaduto! Fulmini cliccati: ${heartsClicked}`;
-          setTimeout(()=>goTo('lvl5','lvl6'),1000);
-        }
-      },1000);
+      // Timer 10 secondi
+      timeout=setTimeout(()=>{
+        scoreDisplay.textContent=`Tempo scaduto! Fulmini cliccati: ${hits}`;
+        setTimeout(()=>goTo('lvl4','lvl5'),1500);
+      },10000);
     }
-    const lvl5 = document.getElementById('lvl5');
-    const observer5 = new MutationObserver(()=>{ startTapGame(); });
-    observer5.observe(lvl5,{attributes:true,attributeFilter:['class']});
+
+    const lvl4=document.getElementById('lvl4');
+    new MutationObserver(mutations=>{
+      mutations.forEach(m=>{
+        if(m.target.id==='lvl4' && !lvl4.classList.contains('hidden')){
+          startTapGame();
+        }
+      });
+    }).observe(lvl4,{attributes:true,attributeFilter:['class']});
 
     /* Scelta simpatica */
     function choiceWrong(){ alert('Mh… prova ancora 😏'); }
-    function choiceRight(){ goTo('lvl6','lvl7'); spawnFinalEffects(); }
+    function choiceRight(){ goTo('lvl5','lvl6'); }
 
-    /* Effetti finali */
-    function spawnFinalEffects(){
-      // cuori blu
-      for(let i=0;i<5;i++){
-        const heart=document.createElement('div');
-        heart.className='heart';
-        heart.textContent='💙';
-        heart.style.left=Math.random()*100+'vw';
-        heart.style.animationDuration=(3+Math.random()*3)+'s';
-        document.body.appendChild(heart);
-        setTimeout(()=>heart.remove(),6000);
-      }
-      // fulmini
-      for(let i=0;i<7;i++){
+    /* Pagina finale - animazioni controllate */
+    function spawnFinalElements(){
+      const emojis=['🫶🏻'];
+      const hearts=['💙'];
+      const bolts=['⚡'];
+      const n=20;
+
+      for(let i=0;i<n;i++){
+        // fulmini
         const bolt=document.createElement('div');
         bolt.className='lightning';
+        bolt.textContent=bolts[Math.floor(Math.random()*bolts.length)];
         bolt.style.left=Math.random()*100+'vw';
+        bolt.style.animationDuration=(2+Math.random()*2)+'s';
         document.body.appendChild(bolt);
-        setTimeout(()=>bolt.remove(),6000);
-      }
-      // emoji 🫶🏻
-      for(let i=0;i<10;i++){
+        setTimeout(()=>bolt.remove(),5000);
+
+        // cuori
+        const heart=document.createElement('div');
+        heart.className='heart';
+        heart.textContent=hearts[Math.floor(Math.random()*hearts.length)];
+        heart.style.left=Math.random()*100+'vw';
+        document.body.appendChild(heart);
+        setTimeout(()=>heart.remove(),5000);
+
+        // emoji
         const emoji=document.createElement('div');
-        emoji.textContent='🫶🏻';
-        emoji.style.position='absolute';
+        emoji.className='emoji';
+        emoji.textContent=emojis[Math.floor(Math.random()*emojis.length)];
         emoji.style.left=Math.random()*100+'vw';
-        emoji.style.top=Math.random()*90+'vh';
-        emoji.style.fontSize='2rem';
         document.body.appendChild(emoji);
-        setTimeout(()=>emoji.remove(),6000);
+        setTimeout(()=>emoji.remove(),5000);
       }
     }
   </script>
+
 </body>
 </html>
