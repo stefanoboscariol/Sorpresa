@@ -128,10 +128,10 @@
     <p id="memoryMsg"></p>
   </div>
 
-  <!-- LIVELLO 5: tap rapido -->
+  <!-- LIVELLO 5: tap rapido con fulmini -->
   <div class="card hidden" id="lvl5">
     <h1>⚡ Livello 4</h1>
-    <p>Tocca tutti i cuori che si accendono! 💙</p>
+    <p>Tocca tutti i fulmini che si accendono! ⚡</p>
     <p><small>Hai <b>10 secondi</b> per trovarne almeno <b>3</b>!</small></p>
     <div class="tap-grid" id="tapGrid"></div>
     <p id="tapScore"></p>
@@ -151,7 +151,7 @@
   <div class="card hidden" id="lvl7">
     <h1>🎉 Auguri!</h1>
     <p>Hai superato tutti i livelli! 🏆<br>Sei fantastica e meriti tutto il meglio 🌟💙</p>
-    <button onclick="spawnHearts(20)">Pioggia di cuori 💙</button>
+    <button onclick="spawnHearts(15)">Pioggia di fulmini ⚡</button>
   </div>
 
   <script>
@@ -200,36 +200,36 @@
       setTimeout(()=>goTo('lvl4','lvl5'),800); 
     }
 
-    /* Tap rapido (lvl5) */
+    /* Tap rapido (lvl5) con fulmini */
     function startTapGame() {
       const grid = document.getElementById('tapGrid');
       const scoreDisplay = document.getElementById('tapScore');
       grid.innerHTML = '';
       scoreDisplay.textContent = '';
-      let heartsClicked = 0;
-      const totalHearts = 8; // meno cuori
+      let lightningClicked = 0;
+      const totalLightning = 8;
 
-      for(let i=0;i<totalHearts;i++){
-        const heart = document.createElement('button');
-        heart.textContent = '💙';
-        heart.style.position = 'absolute';
-        heart.style.top = Math.random()*160 + 'px';
-        heart.style.left = Math.random()*320 + 'px';
-        heart.style.fontSize = '2rem';
-        heart.style.border = 'none';
-        heart.style.background = 'transparent';
-        heart.style.cursor = 'pointer';
-        heart.addEventListener('click',()=>{
-          heartsClicked++;
-          heart.remove();
-          scoreDisplay.textContent = `Cuori cliccati: ${heartsClicked}`;
+      for(let i=0;i<totalLightning;i++){
+        const lightning = document.createElement('button');
+        lightning.textContent = '⚡';
+        lightning.style.position = 'absolute';
+        lightning.style.top = Math.random()*160 + 'px';
+        lightning.style.left = Math.random()*320 + 'px';
+        lightning.style.fontSize = '2rem';
+        lightning.style.border = 'none';
+        lightning.style.background = 'transparent';
+        lightning.style.cursor = 'pointer';
+        lightning.addEventListener('click',()=>{
+          lightningClicked++;
+          lightning.remove();
+          scoreDisplay.textContent = `Fulmini cliccati: ${lightningClicked}`;
         });
-        grid.appendChild(heart);
+        grid.appendChild(lightning);
       }
 
       setTimeout(()=>{
-        scoreDisplay.textContent = `Hai cliccato ${heartsClicked} cuori!`;
-        if(heartsClicked >=3){
+        scoreDisplay.textContent = `Hai cliccato ${lightningClicked} fulmini!`;
+        if(lightningClicked >=3){
           scoreDisplay.textContent += ' 🎉 Bene! Passiamo al prossimo livello.';
           setTimeout(()=>goTo('lvl5','lvl6'),1000);
         } else {
@@ -239,7 +239,6 @@
       },10000);
     }
 
-    /* Lancia il gioco quando lvl5 diventa visibile */
     const lvl5 = document.getElementById('lvl5');
     const observer = new MutationObserver(mutations=>{
       mutations.forEach(m=>{
@@ -252,14 +251,14 @@
 
     /* Scelta simpatica */
     function choiceWrong(){ alert('Mh… prova ancora 😏'); }
-    function choiceRight(){ goTo('lvl6','lvl7'); spawnHearts(15); } // meno cuori
+    function choiceRight(){ goTo('lvl6','lvl7'); spawnHearts(15); }
 
-    /* Cuoricini finale */
+    /* Fulmini finali */
     function spawnHearts(n){
       for(let i=0;i<n;i++){
         const heart=document.createElement('div');
         heart.className='heart';
-        heart.textContent=['💙','💙','💙'][Math.floor(Math.random()*3)];
+        heart.textContent='⚡';
         heart.style.left=Math.random()*100+'vw';
         heart.style.animationDuration=(3+Math.random()*3)+'s';
         document.body.appendChild(heart);
