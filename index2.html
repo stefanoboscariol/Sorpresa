@@ -34,7 +34,7 @@
       to   { transform: scale(1); opacity: 1; }
     }
 
-    h1 { font-size: 1.9rem; margin-bottom: 1rem; color: #2575fc; } /* colore blu per titoli */
+    h1 { font-size: 1.9rem; margin-bottom: 1rem; color: #2575fc; } 
     p  { font-size: 1.05rem; line-height: 1.5; margin-bottom: 1rem; }
 
     button {
@@ -66,9 +66,6 @@
     .dot { width: 22px; height: 22px; background: #2575fc; border-radius: 50%; position: absolute; cursor: pointer; }
     canvas { position: absolute; top:0; left:0; }
 
-    .heart { position: absolute; bottom: -20px; font-size: 20px; animation: floatUp 5s linear infinite; opacity: 0.7; }
-    @keyframes floatUp { from { transform: translateY(0) scale(1); opacity: 0.7; } to { transform: translateY(-110vh) scale(1.6); opacity: 0; } }
-
     /* Tap rapido grid */
     #tapGrid {
       position: relative;
@@ -78,6 +75,24 @@
       border: 2px dashed #2575fc;
       border-radius: 16px;
       overflow: hidden;
+    }
+
+    .timer { font-weight: bold; margin-bottom: 0.5rem; color:#ff4444; }
+
+    .heart { position: absolute; bottom: -20px; font-size: 20px; animation: floatUp 5s linear infinite; opacity: 0.7; }
+    @keyframes floatUp { from { transform: translateY(0) scale(1); opacity: 0.7; } to { transform: translateY(-110vh) scale(1.6); opacity: 0; } }
+
+    /* Fulmini pagina finale */
+    .lightning {
+      position: absolute;
+      font-size: 2rem;
+      color: #ffff33;
+      top: -50px;
+      animation: fall 2s linear infinite;
+    }
+    @keyframes fall {
+      from { transform: translateY(-50px) rotate(0deg); }
+      to { transform: translateY(110vh) rotate(20deg); }
     }
   </style>
 </head>
@@ -125,15 +140,17 @@
       <button style="background:#6a11cb;" onclick="memoryWrong()">Verde</button>
       <button style="background:#2575fc;" onclick="memoryWrong()">Bianco</button>
     </div>
+    <p class="timer" id="memoryTimer">Tempo rimasto: 10s</p>
     <p id="memoryMsg"></p>
   </div>
 
-  <!-- LIVELLO 5: tap rapido con fulmini -->
+  <!-- LIVELLO 5: tap rapido -->
   <div class="card hidden" id="lvl5">
     <h1>⚡ Livello 4</h1>
     <p>Tocca tutti i fulmini che si accendono! ⚡</p>
     <p><small>Hai <b>10 secondi</b> per trovarne almeno <b>3</b>!</small></p>
     <div class="tap-grid" id="tapGrid"></div>
+    <p class="timer" id="tapTimer">Tempo rimasto: 10s</p>
     <p id="tapScore"></p>
   </div>
 
@@ -150,8 +167,8 @@
   <!-- LIVELLO 7: messaggio finale auguri -->
   <div class="card hidden" id="lvl7">
     <h1>🎉 Auguri!</h1>
-    <p>Hai superato tutti i livelli! 🏆<br>Sei fantastica e meriti tutto il meglio 🌟💙</p>
-    <button onclick="spawnHearts(15)">Pioggia di fulmini ⚡</button>
+    <p>Hai superato tutti i livelli! 🏆<br>Sei fantastica e meriti tutto il meglio 🌟💙🫶🏻</p>
+    <button onclick="spawnFinalEffects()">Effetti finali ✨</button>
   </div>
 
   <script>
@@ -200,72 +217,103 @@
       setTimeout(()=>goTo('lvl4','lvl5'),800); 
     }
 
-    /* Tap rapido (lvl5) con fulmini */
+    /* Timer livello 4 memory/tap */
+    function startMemoryTimer() {
+      let time = 10;
+      const timerEl = document.getElementById('memoryTimer');
+      const interval = setInterval(()=>{
+        time--;
+        timerEl.textContent = `Tempo rimasto: ${time}s`;
+        if(time<=0){
+          clearInterval(interval);
+          timerEl.textContent = 'Tempo scaduto! 😅';
+          setTimeout(()=>goTo('lvl4','lvl5'),1000);
+        }
+      },1000);
+    }
+    const lvl4 = document.getElementById('lvl4');
+    const observer4 = new MutationObserver(()=>{ startMemoryTimer(); });
+    observer4.observe(lvl4,{attributes:true,attributeFilter:['class']});
+
+    /* Tap rapido livello 5 */
     function startTapGame() {
       const grid = document.getElementById('tapGrid');
       const scoreDisplay = document.getElementById('tapScore');
+      const timerEl = document.getElementById('tapTimer');
       grid.innerHTML = '';
       scoreDisplay.textContent = '';
-      let lightningClicked = 0;
-      const totalLightning = 8;
+      let heartsClicked = 0;
+      const totalHearts = 8;
 
-      for(let i=0;i<totalLightning;i++){
-        const lightning = document.createElement('button');
-        lightning.textContent = '⚡';
-        lightning.style.position = 'absolute';
-        lightning.style.top = Math.random()*160 + 'px';
-        lightning.style.left = Math.random()*320 + 'px';
-        lightning.style.fontSize = '2rem';
-        lightning.style.border = 'none';
-        lightning.style.background = 'transparent';
-        lightning.style.cursor = 'pointer';
-        lightning.addEventListener('click',()=>{
-          lightningClicked++;
-          lightning.remove();
-          scoreDisplay.textContent = `Fulmini cliccati: ${lightningClicked}`;
+      for(let i=0;i<totalHearts;i++){
+        const bolt = document.createElement('button');
+        bolt.textContent = '⚡';
+        bolt.style.position = 'absolute';
+        bolt.style.top = Math.random()*160 + 'px';
+        bolt.style.left = Math.random()*320 + 'px';
+        bolt.style.fontSize = '2rem';
+        bolt.style.border = 'none';
+        bolt.style.background = 'transparent';
+        bolt.style.cursor = 'pointer';
+        bolt.addEventListener('click',()=>{
+          heartsClicked++;
+          bolt.remove();
+          scoreDisplay.textContent = `Fulmini cliccati: ${heartsClicked}`;
         });
-        grid.appendChild(lightning);
+        grid.appendChild(bolt);
       }
 
-      setTimeout(()=>{
-        scoreDisplay.textContent = `Hai cliccato ${lightningClicked} fulmini!`;
-        if(lightningClicked >=3){
-          scoreDisplay.textContent += ' 🎉 Bene! Passiamo al prossimo livello.';
+      let time = 10;
+      const interval = setInterval(()=>{
+        time--;
+        timerEl.textContent = `Tempo rimasto: ${time}s`;
+        if(time<=0){
+          clearInterval(interval);
+          scoreDisplay.textContent = `Tempo scaduto! Fulmini cliccati: ${heartsClicked}`;
           setTimeout(()=>goTo('lvl5','lvl6'),1000);
-        } else {
-          scoreDisplay.textContent += ' 😅 Prova ancora!';
-          setTimeout(()=>startTapGame(),1500);
         }
-      },10000);
+      },1000);
     }
-
     const lvl5 = document.getElementById('lvl5');
-    const observer = new MutationObserver(mutations=>{
-      mutations.forEach(m=>{
-        if(m.target.id==='lvl5' && !lvl5.classList.contains('hidden')){
-          startTapGame();
-        }
-      });
-    });
-    observer.observe(lvl5,{attributes:true,attributeFilter:['class']});
+    const observer5 = new MutationObserver(()=>{ startTapGame(); });
+    observer5.observe(lvl5,{attributes:true,attributeFilter:['class']});
 
     /* Scelta simpatica */
     function choiceWrong(){ alert('Mh… prova ancora 😏'); }
-    function choiceRight(){ goTo('lvl6','lvl7'); spawnHearts(15); }
+    function choiceRight(){ goTo('lvl6','lvl7'); spawnFinalEffects(); }
 
-    /* Fulmini finali */
-    function spawnHearts(n){
-      for(let i=0;i<n;i++){
+    /* Effetti finali */
+    function spawnFinalEffects(){
+      // cuori blu
+      for(let i=0;i<5;i++){
         const heart=document.createElement('div');
         heart.className='heart';
-        heart.textContent='⚡';
+        heart.textContent='💙';
         heart.style.left=Math.random()*100+'vw';
         heart.style.animationDuration=(3+Math.random()*3)+'s';
         document.body.appendChild(heart);
         setTimeout(()=>heart.remove(),6000);
       }
+      // fulmini
+      for(let i=0;i<7;i++){
+        const bolt=document.createElement('div');
+        bolt.className='lightning';
+        bolt.style.left=Math.random()*100+'vw';
+        document.body.appendChild(bolt);
+        setTimeout(()=>bolt.remove(),6000);
+      }
+      // emoji 🫶🏻
+      for(let i=0;i<10;i++){
+        const emoji=document.createElement('div');
+        emoji.textContent='🫶🏻';
+        emoji.style.position='absolute';
+        emoji.style.left=Math.random()*100+'vw';
+        emoji.style.top=Math.random()*90+'vh';
+        emoji.style.fontSize='2rem';
+        document.body.appendChild(emoji);
+        setTimeout(()=>emoji.remove(),6000);
+      }
     }
   </script>
-
 </body>
 </html>
