@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sorpresa ✨</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at top, #ffdde1, #ee9ca7);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      color: #333;
+      overflow: hidden;
+    }
+
+    .card {
+      background: white;
+      padding: 2.5rem 2rem;
+      border-radius: 24px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+      max-width: 420px;
+      text-align: center;
+      animation: pop 0.8s ease-out;
+    }
+
+    @keyframes pop {
+      from { transform: scale(0.8); opacity: 0; }
+      to   { transform: scale(1); opacity: 1; }
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    p {
+      font-size: 1.1rem;
+      line-height: 1.5;
+      margin-bottom: 1.5rem;
+    }
+
+    button {
+      background: linear-gradient(135deg, #ff6a88, #ff99ac);
+      border: none;
+      color: white;
+      font-size: 1rem;
+      padding: 0.75rem 1.5rem;
+      border-radius: 999px;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(255,106,136,0.4);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 26px rgba(255,106,136,0.5);
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    /* cuoricini */
+    .heart {
+      position: absolute;
+      bottom: -20px;
+      font-size: 20px;
+      animation: floatUp 5s linear infinite;
+      opacity: 0.7;
+    }
+
+    @keyframes floatUp {
+      from { transform: translateY(0) scale(1); opacity: 0.7; }
+      to   { transform: translateY(-110vh) scale(1.6); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card" id="step1">
+    <h1>👋 Ehi tu!</h1>
+    <p>Qualcuno ha preparato una piccola sorpresa solo per te.</p>
+    <button onclick="openGift()">Apri la sorpresa 🎁</button>
+  </div>
+
+  <div class="card hidden" id="step2">
+    <h1>💖 Auguri!</h1>
+    <p>
+      Volevo dirti che sei una persona speciale,
+      e spero che oggi tu possa sorridere un po’ di più.
+      <br><br>
+      Questo messaggio è solo per te ✨
+    </p>
+    <button onclick="moreHearts()">Ancora un po’ di amore 💕</button>
+  </div>
+
+  <script>
+    function openGift() {
+      document.getElementById('step1').classList.add('hidden');
+      document.getElementById('step2').classList.remove('hidden');
+      spawnHearts(20);
+    }
+
+    function spawnHearts(n) {
+      for (let i = 0; i < n; i++) {
+        const heart = document.createElement('div');
+        heart.className = 'heart';
+        heart.textContent = ['💖','💕','💗','💘','💝'][Math.floor(Math.random()*5)];
+        heart.style.left = Math.random() * 100 + 'vw';
+        heart.style.animationDuration = 3 + Math.random() * 3 + 's';
+        document.body.appendChild(heart);
+
+        setTimeout(() => heart.remove(), 6000);
+      }
+    }
+
+    function moreHearts() {
+      spawnHearts(30);
+    }
+  </script>
+
+</body>
+</html>
