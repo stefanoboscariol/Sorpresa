@@ -1,99 +1,102 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TANTI AUGURI FLA ✨</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TANTI AUGURI FLA✨</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #89f7fe, #66a6ff);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      color: #333;
+      overflow: hidden;
+    }
 
-<style>
-*{box-sizing:border-box;}
+    .card {
+      background: #f0f8ff;
+      padding: 2.5rem 2rem;
+      border-radius: 24px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+      max-width: 420px;
+      width: 90%;
+      text-align: center;
+      animation: pop 0.6s ease-out;
+    }
 
-body{
-  margin:0;
-  min-height:100vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background:linear-gradient(135deg,#89f7fe,#66a6ff);
-  font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
-  overflow:hidden;
-}
+    @keyframes pop {
+      from { transform: scale(0.85); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
 
-.card{
-  background:#f0f8ff;
-  width:90vw;
-  max-width:420px;
-  max-height:90vh;
-  padding:2rem;
-  border-radius:24px;
-  box-shadow:0 20px 40px rgba(0,0,0,0.2);
-  text-align:center;
-  overflow-y:auto;
-  animation:pop .5s ease;
-}
+    h1 { font-size: 1.9rem; margin-bottom: 1rem; color: #2575fc; }
+    p  { font-size: 1.05rem; line-height: 1.5; margin-bottom: 1rem; }
 
-@keyframes pop{
-  from{transform:scale(.9);opacity:0}
-  to{transform:scale(1);opacity:1}
-}
+    button {
+      background: linear-gradient(135deg, #6a11cb, #2575fc);
+      border: none;
+      color: white;
+      font-size: 1rem;
+      padding: 0.7rem 1.4rem;
+      border-radius: 999px;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(38,79,255,0.4);
+      margin-top: 0.5rem;
+    }
 
-.hidden{display:none}
+    .hidden { display: none; }
+    .choices button { margin: 0.35rem; }
 
-h1{color:#2575fc;margin-bottom:1rem;font-size:1.9rem}
-p{font-size:1.05rem;line-height:1.5;margin-bottom:1rem}
+    .dots { position: relative; height: 180px; margin: 1rem 0; }
+    .dot {
+      width: 22px;
+      height: 22px;
+      background: #2575fc;
+      border-radius: 50%;
+      position: absolute;
+      cursor: pointer;
+      z-index: 2;
+    }
 
-button{
-  background:linear-gradient(135deg,#6a11cb,#2575fc);
-  border:none;
-  color:#fff;
-  font-size:1rem;
-  padding:.7rem 1.4rem;
-  border-radius:999px;
-  margin:.4rem;
-}
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 1;
+    }
 
-button:active{transform:scale(.96)}
+    #tapGrid {
+      position: relative;
+      width: 100%;
+      height: 200px;
+      border: 2px dashed #2575fc;
+      border-radius: 16px;
+      margin: 1rem 0;
+    }
 
-.choices button{padding:.6rem 1.1rem}
+    .lightning { position: absolute; font-size: 2rem; animation: fall 2s linear infinite; }
+    @keyframes fall {
+      from { transform: translateY(-50px); }
+      to { transform: translateY(250px); }
+    }
 
-/* PUNTINI */
-.dots{
-  position:relative;
-  width:100%;
-  height:35vh;
-  max-height:200px;
-}
+    .heart, .emoji {
+      position: absolute;
+      font-size: 26px;
+      animation: floatUp 6s linear infinite;
+      opacity: 0.7;
+    }
 
-.dot{
-  width:20px;
-  height:20px;
-  background:#2575fc;
-  border-radius:50%;
-  position:absolute;
-}
-
-/* TAP GAME */
-#tapGrid{
-  position:relative;
-  width:100%;
-  height:35vh;
-  border:2px dashed #2575fc;
-  border-radius:16px;
-  overflow:hidden;
-}
-
-/* FINALE */
-.fall{
-  position:fixed;
-  top:-30px;
-  font-size:22px;
-  animation:fall linear forwards;
-}
-
-@keyframes fall{
-  to{transform:translateY(110vh);opacity:0}
-}
-</style>
+    @keyframes floatUp {
+      from { transform: translateY(0); opacity: 0.7; }
+      to { transform: translateY(-110vh); opacity: 0; }
+    }
+  </style>
 </head>
 
 <body>
@@ -101,34 +104,30 @@ button:active{transform:scale(.96)}
 <!-- LIVELLO 1 -->
 <div class="card" id="lvl1">
   <h1>👋 Ciao Flavietta!</h1>
-  <p>
-    Questa è una piccola sorpresa…<br>
-    ma per arrivare in fondo dovrai <b>guadagnartela</b> 😉
-  </p>
-  <button onclick="go('lvl1','lvl2')">Iniziamo 🎮</button>
+  <p>Questa è una piccola sorpresa…<br>ma per arrivare in fondo dovrai <b>guadagnartela</b> 😉</p>
+  <button onclick="goTo('lvl1','lvl2')">Iniziamo 🎮</button>
 </div>
 
 <!-- LIVELLO 2 -->
 <div class="card hidden" id="lvl2">
   <h1>🧩 Livello 1</h1>
-  <p>Unisci i puntini <b>in ordine</b> (1 → 2 → 3)</p>
-  <p><i>Dai, è più facile di un puzzle da bambini 😄</i></p>
+  <p>Unisci i puntini in ordine</p>
   <div class="dots">
-    <div class="dot" style="top:70%;left:10%" onclick="hit(1)"></div>
-    <div class="dot" style="top:20%;left:45%" onclick="hit(2)"></div>
-    <div class="dot" style="top:70%;left:80%" onclick="hit(3)"></div>
+    <canvas id="lineCanvas" width="360" height="180"></canvas>
+    <div class="dot" style="top:120px; left:40px" onclick="hitDot(1,this)"></div>
+    <div class="dot" style="top:40px; left:170px" onclick="hitDot(2,this)"></div>
+    <div class="dot" style="top:120px; left:300px" onclick="hitDot(3,this)"></div>
   </div>
 </div>
 
 <!-- LIVELLO 3 -->
 <div class="card hidden" id="lvl3">
   <h1>➕ Livello 2</h1>
-  <p>Concentrazione massima 🧠</p>
   <p><b>Quanto fa 7 × 6?</b></p>
   <div class="choices">
-    <button onclick="wrong()">36</button>
-    <button onclick="rightMath()">42</button>
-    <button onclick="wrong()">48</button>
+    <button onclick="mathWrong()">36</button>
+    <button onclick="mathRight()">42</button>
+    <button onclick="mathWrong()">48</button>
   </div>
   <p id="mathMsg"></p>
 </div>
@@ -136,112 +135,137 @@ button:active{transform:scale(.96)}
 <!-- LIVELLO 4 -->
 <div class="card hidden" id="lvl4">
   <h1>⚡ Livello 3</h1>
-  <p>
-    Tocca tutti i fulmini che appaiono! ⚡<br>
-    <small>Abbi pazienza… andrà avanti da solo una volta trovati 😉</small>
-  </p>
-  <p><small>Hai <b>pochi secondi</b> per trovarne almeno <b>3</b>!</small></p>
+  <p>Tocca più fulmini possibile ⚡</p>
+  <p><small>Hai <b>1 minuto</b> ⏱️</small></p>
   <div id="tapGrid"></div>
-  <p id="tapMsg"></p>
+  <p id="tapScore"></p>
 </div>
 
 <!-- LIVELLO 5 -->
 <div class="card hidden" id="lvl5">
   <h1>😎 Livello 4</h1>
-  <p>Carino ehh? 🙂</p>
+  <p>Carino eh?</p>
   <div class="choices">
     <button onclick="choiceWrong()">Nhaa 🤔</button>
-    <button onclick="choiceRight()">Carino dai… hihihi 🎉</button>
+    <button onclick="choiceRight()">Carino dai 🎉</button>
   </div>
 </div>
 
-<!-- FINALE -->
+<!-- LIVELLO FINALE -->
 <div class="card hidden" id="lvl6">
-  <h1>🎉 Flavia… AUGURI! +17 🎉</h1>
+  <h1>🎉 AUGURI FLA 🎉</h1>
   <p>
     Un altro capitolo sta per iniziare 🏆<br>
-    Certo, non potrà essere bello come lo scorso,<br>
+    Non potrà esser bello come lo scorso,<br>
     in cui ho fatto capolino io (hihihi),<br>
-    ma proveremo a renderlo memorabile…<br><br>
-    <b>AUGURI BELLISSIMA 🌟💙🫶🏻</b>
+    ma proveremo a renderlo memorabile 💙🫶🏻
   </p>
-  <button onclick="finale()">🎆 Guarda! 🎆</button>
+  <button onclick="spawnFinalElements()">✨ Guarda ✨</button>
 </div>
 
 <script>
-function go(a,b){
-  document.getElementById(a).classList.add('hidden');
-  document.getElementById(b).classList.remove('hidden');
-}
-
-/* PUNTINI */
-let step=1;
-function hit(n){
-  if(n!==step) return;
-  step++;
-  if(step===4) setTimeout(()=>go('lvl2','lvl3'),500);
-}
-
-/* MATEMATICA */
-function wrong(){
-  document.getElementById('mathMsg').textContent='Mh… riprova, so che puoi 😏';
-}
-function rightMath(){
-  document.getElementById('mathMsg').textContent='Perfetto! Sapevo ce l’avresti fatta 😎';
-  setTimeout(()=>go('lvl3','lvl4'),800);
-}
-
-/* TAP GAME */
-function startTap(){
-  const grid=document.getElementById('tapGrid');
-  const msg=document.getElementById('tapMsg');
-  grid.innerHTML='';
-  msg.textContent='';
-  let hits=0;
-
-  for(let i=0;i<6;i++){
-    const b=document.createElement('button');
-    b.textContent='⚡';
-    b.style.position='absolute';
-    b.style.left=Math.random()*80+'%';
-    b.style.top=Math.random()*70+'%';
-    b.style.background='transparent';
-    b.style.border='none';
-    b.style.fontSize='2rem';
-    b.onclick=()=>{
-      hits++;
-      b.remove();
-      if(hits>=3){
-        msg.textContent='Perfetto! 😄';
-        setTimeout(()=>go('lvl4','lvl5'),700);
-      }
-    };
-    grid.appendChild(b);
+  function goTo(from,to){
+    document.getElementById(from).classList.add('hidden');
+    document.getElementById(to).classList.remove('hidden');
   }
-}
 
-const obs=new MutationObserver(()=>{
-  if(!lvl4.classList.contains('hidden')) startTap();
-});
-obs.observe(lvl4,{attributes:true});
+  /* Puntini con linee */
+  let currentDot = 1;
+  let lastPos = null;
+  const canvas = document.getElementById('lineCanvas');
+  const ctx = canvas.getContext('2d');
 
-/* SCELTA */
-function choiceWrong(){ alert('Mh… ripensaci 😏'); }
-function choiceRight(){ go('lvl5','lvl6'); }
+  function hitDot(n, el){
+    if(n !== currentDot) return;
+    const rect = el.getBoundingClientRect();
+    const parent = el.parentElement.getBoundingClientRect();
+    const x = rect.left - parent.left + 11;
+    const y = rect.top - parent.top + 11;
 
-/* FINALE */
-function finale(){
-  const emojis=['⚡','💙','🫶🏻'];
-  for(let i=0;i<25;i++){
-    const e=document.createElement('div');
-    e.className='fall';
-    e.textContent=emojis[Math.floor(Math.random()*emojis.length)];
-    e.style.left=Math.random()*100+'vw';
-    e.style.animationDuration=(3+Math.random()*3)+'s';
-    document.body.appendChild(e);
-    setTimeout(()=>e.remove(),6000);
+    if(lastPos){
+      ctx.beginPath();
+      ctx.moveTo(lastPos.x, lastPos.y);
+      ctx.lineTo(x, y);
+      ctx.strokeStyle = '#2575fc';
+      ctx.lineWidth = 4;
+      ctx.lineCap = 'round';
+      ctx.stroke();
+    }
+    lastPos = {x,y};
+    currentDot++;
+    if(currentDot === 4){
+      setTimeout(()=>goTo('lvl2','lvl3'),600);
+    }
   }
-}
+
+  /* Matematica */
+  function mathWrong(){
+    document.getElementById('mathMsg').textContent = 'Riprova 😏';
+  }
+  function mathRight(){
+    document.getElementById('mathMsg').textContent = 'Perfetto 😎';
+    setTimeout(()=>goTo('lvl3','lvl4'),900);
+  }
+
+  /* Fulmini – 1 minuto */
+  function startTapGame(){
+    const grid = document.getElementById('tapGrid');
+    const score = document.getElementById('tapScore');
+    grid.innerHTML='';
+    let hits = 0;
+
+    const interval = setInterval(()=>{
+      const bolt = document.createElement('div');
+      bolt.textContent='⚡';
+      bolt.style.position='absolute';
+      bolt.style.left=Math.random()*90+'%';
+      bolt.style.top=Math.random()*80+'%';
+      bolt.style.fontSize='2rem';
+      bolt.onclick=()=>{
+        hits++;
+        bolt.remove();
+        score.textContent = `Fulmini: ${hits}`;
+      };
+      grid.appendChild(bolt);
+      setTimeout(()=>bolt.remove(),2500);
+    },700);
+
+    setTimeout(()=>{
+      clearInterval(interval);
+      score.textContent = `Tempo scaduto! Fulmini: ${hits}`;
+      setTimeout(()=>goTo('lvl4','lvl5'),1500);
+    },60000); // 1 minuto
+  }
+
+  new MutationObserver(()=>{
+    if(!document.getElementById('lvl4').classList.contains('hidden')){
+      startTapGame();
+    }
+  }).observe(document.getElementById('lvl4'),{attributes:true});
+
+  function choiceWrong(){ alert('Daiiii 😏'); }
+  function choiceRight(){ goTo('lvl5','lvl6'); }
+
+  /* Finale – pochi cuori */
+  function spawnFinalElements(){
+    for(let i=0;i<6;i++){
+      const heart=document.createElement('div');
+      heart.className='heart';
+      heart.textContent='💙';
+      heart.style.left=Math.random()*100+'vw';
+      document.body.appendChild(heart);
+      setTimeout(()=>heart.remove(),6000);
+    }
+
+    for(let i=0;i<10;i++){
+      const emoji=document.createElement('div');
+      emoji.className='emoji';
+      emoji.textContent='🫶🏻';
+      emoji.style.left=Math.random()*100+'vw';
+      document.body.appendChild(emoji);
+      setTimeout(()=>emoji.remove(),6000);
+    }
+  }
 </script>
 
 </body>
