@@ -1,248 +1,248 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TANTI AUGURI FLA✨</title>
-  <style>
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: linear-gradient(135deg, #89f7fe, #66a6ff); /* tema blu/azzurro */
-      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-      color: #333;
-      overflow: hidden;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TANTI AUGURI FLA ✨</title>
 
-    .card {
-      background: #f0f8ff;
-      padding: 2.5rem 2rem;
-      border-radius: 24px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-      max-width: 420px;
-      width: 90%;
-      text-align: center;
-      animation: pop 0.6s ease-out;
-    }
+<style>
+*{box-sizing:border-box;}
 
-    @keyframes pop { from { transform: scale(0.85); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+body{
+  margin:0;
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:linear-gradient(135deg,#89f7fe,#66a6ff);
+  font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+  overflow:hidden;
+}
 
-    h1 { font-size: 1.9rem; margin-bottom: 1rem; color: #2575fc; }
-    p  { font-size: 1.05rem; line-height: 1.5; margin-bottom: 1rem; }
+.card{
+  background:#f0f8ff;
+  width:90vw;
+  max-width:420px;
+  max-height:90vh;
+  padding:2rem;
+  border-radius:24px;
+  box-shadow:0 20px 40px rgba(0,0,0,0.2);
+  text-align:center;
+  overflow-y:auto;
+  animation:pop .5s ease;
+}
 
-    button {
-      background: linear-gradient(135deg, #6a11cb, #2575fc);
-      border: none;
-      color: white;
-      font-size: 1rem;
-      padding: 0.7rem 1.4rem;
-      border-radius: 999px;
-      cursor: pointer;
-      box-shadow: 0 8px 20px rgba(38,79,255,0.4);
-      transition: transform 0.15s ease, box-shadow 0.15s ease;
-      margin-top: 0.5rem;
-    }
+@keyframes pop{
+  from{transform:scale(.9);opacity:0}
+  to{transform:scale(1);opacity:1}
+}
 
-    button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 12px 26px rgba(38,79,255,0.5);
-    }
+.hidden{display:none}
 
-    .hidden { display: none; }
-    .choices button { margin: 0.35rem; padding: 0.6rem 1.1rem; font-size: 0.95rem; }
+h1{color:#2575fc;margin-bottom:1rem;font-size:1.9rem}
+p{font-size:1.05rem;line-height:1.5;margin-bottom:1rem}
 
-    .dots { position: relative; height: 180px; margin: 1rem 0; }
-    .dot { width: 22px; height: 22px; background: #2575fc; border-radius: 50%; position: absolute; cursor: pointer; }
-    canvas { position: absolute; top:0; left:0; }
+button{
+  background:linear-gradient(135deg,#6a11cb,#2575fc);
+  border:none;
+  color:#fff;
+  font-size:1rem;
+  padding:.7rem 1.4rem;
+  border-radius:999px;
+  margin:.4rem;
+}
 
-    .lightning { position: absolute; font-size: 2rem; animation: fall 2s linear infinite; opacity: 0.8; }
-    @keyframes fall { from { transform: translateY(-50px) scale(1); } to { transform: translateY(250px) scale(1); } }
+button:active{transform:scale(.96)}
 
-    .heart, .emoji { position: absolute; font-size: 24px; animation: floatUp 5s linear infinite; opacity: 0.7; }
-    @keyframes floatUp { from { transform: translateY(0) scale(1); opacity: 0.7; } to { transform: translateY(-110vh) scale(1.3); opacity: 0; } }
+.choices button{padding:.6rem 1.1rem}
 
-    #tapGrid { position: relative; width: 100%; height: 200px; margin: 1rem 0; border: 2px dashed #2575fc; border-radius: 16px; overflow: hidden; }
-  </style>
+/* PUNTINI */
+.dots{
+  position:relative;
+  width:100%;
+  height:35vh;
+  max-height:200px;
+}
+
+.dot{
+  width:20px;
+  height:20px;
+  background:#2575fc;
+  border-radius:50%;
+  position:absolute;
+}
+
+/* TAP GAME */
+#tapGrid{
+  position:relative;
+  width:100%;
+  height:35vh;
+  border:2px dashed #2575fc;
+  border-radius:16px;
+  overflow:hidden;
+}
+
+/* FINALE */
+.fall{
+  position:fixed;
+  top:-30px;
+  font-size:22px;
+  animation:fall linear forwards;
+}
+
+@keyframes fall{
+  to{transform:translateY(110vh);opacity:0}
+}
+</style>
 </head>
+
 <body>
 
-  <!-- LIVELLO 1 -->
-  <div class="card" id="lvl1">
-    <h1>👋Ciao Flavietta!</h1>
-    <p>Questa è una piccola sorpresa…<br>ma per arrivare in fondo dovrai <b>guadagnartela</b> 😉</p>
-    <button onclick="goTo('lvl1','lvl2')">Iniziamo 🎮</button>
+<!-- LIVELLO 1 -->
+<div class="card" id="lvl1">
+  <h1>👋 Ciao Flavietta!</h1>
+  <p>
+    Questa è una piccola sorpresa…<br>
+    ma per arrivare in fondo dovrai <b>guadagnartela</b> 😉
+  </p>
+  <button onclick="go('lvl1','lvl2')">Iniziamo 🎮</button>
+</div>
+
+<!-- LIVELLO 2 -->
+<div class="card hidden" id="lvl2">
+  <h1>🧩 Livello 1</h1>
+  <p>Unisci i puntini <b>in ordine</b> (1 → 2 → 3)</p>
+  <p><i>Dai, è più facile di un puzzle da bambini 😄</i></p>
+  <div class="dots">
+    <div class="dot" style="top:70%;left:10%" onclick="hit(1)"></div>
+    <div class="dot" style="top:20%;left:45%" onclick="hit(2)"></div>
+    <div class="dot" style="top:70%;left:80%" onclick="hit(3)"></div>
   </div>
+</div>
 
-  <!-- LIVELLO 2: puntini -->
-  <div class="card hidden" id="lvl2">
-    <h1>🧩 Livello 1</h1>
-    <p>Unisci i puntini <b>in ordine</b> (1 → 2 → 3)</p>
-    <p><i>Dai, è più facile di un puzzle da bambini 😄</i></p>
-    <div class="dots">
-      <canvas id="lineCanvas" width="360" height="180"></canvas>
-      <div class="dot" style="top:120px; left:40px" onclick="hitDot(1)"></div>
-      <div class="dot" style="top:40px; left:170px" onclick="hitDot(2)"></div>
-      <div class="dot" style="top:120px; left:300px" onclick="hitDot(3)"></div>
-    </div>
+<!-- LIVELLO 3 -->
+<div class="card hidden" id="lvl3">
+  <h1>➕ Livello 2</h1>
+  <p>Concentrazione massima 🧠</p>
+  <p><b>Quanto fa 7 × 6?</b></p>
+  <div class="choices">
+    <button onclick="wrong()">36</button>
+    <button onclick="rightMath()">42</button>
+    <button onclick="wrong()">48</button>
   </div>
+  <p id="mathMsg"></p>
+</div>
 
-  <!-- LIVELLO 3: matematica -->
-  <div class="card hidden" id="lvl3">
-    <h1>➕ Livello 2</h1>
-    <p>Concentrazione massima 🧠</p>
-    <p><b>Quanto fa 7 × 6?</b></p>
-    <div class="choices">
-      <button onclick="mathWrong()">36</button>
-      <button onclick="mathRight()">42</button>
-      <button onclick="mathWrong()">48</button>
-    </div>
-    <p id="mathMsg"></p>
+<!-- LIVELLO 4 -->
+<div class="card hidden" id="lvl4">
+  <h1>⚡ Livello 3</h1>
+  <p>
+    Tocca tutti i fulmini che appaiono! ⚡<br>
+    <small>Abbi pazienza… andrà avanti da solo una volta trovati 😉</small>
+  </p>
+  <p><small>Hai <b>pochi secondi</b> per trovarne almeno <b>3</b>!</small></p>
+  <div id="tapGrid"></div>
+  <p id="tapMsg"></p>
+</div>
+
+<!-- LIVELLO 5 -->
+<div class="card hidden" id="lvl5">
+  <h1>😎 Livello 4</h1>
+  <p>Carino ehh? 🙂</p>
+  <div class="choices">
+    <button onclick="choiceWrong()">Nhaa 🤔</button>
+    <button onclick="choiceRight()">Carino dai… hihihi 🎉</button>
   </div>
+</div>
 
-  <!-- LIVELLO 4: tap rapido fulmini -->
-  <div class="card hidden" id="lvl4">
-    <h1>⚡ Livello 3</h1>
-    <p>Tocca tutti i fulmini che appaiono! ⚡</p> Abbi pazienza, andrà avanti da solo, una volta trovati i fulmini...!</p>
-    <p><small>Hai <b>pochi secondi</b> per trovarne almeno <b>3</b>!</small></p>
-    <div id="tapGrid"></div>
-    <p id="tapScore"></p>
-  </div>
+<!-- FINALE -->
+<div class="card hidden" id="lvl6">
+  <h1>🎉 Flavia… AUGURI! +17 🎉</h1>
+  <p>
+    Un altro capitolo sta per iniziare 🏆<br>
+    Certo, non potrà essere bello come lo scorso,<br>
+    in cui ho fatto capolino io (hihihi),<br>
+    ma proveremo a renderlo memorabile…<br><br>
+    <b>AUGURI BELLISSIMA 🌟💙🫶🏻</b>
+  </p>
+  <button onclick="finale()">🎆 Guarda! 🎆</button>
+</div>
 
-  <!-- LIVELLO 5: scelta simpatica -->
-  <div class="card hidden" id="lvl5">
-    <h1>😎 Livello 4</h1>
-    <p>Carino ehh? :)</p>
-    <div class="choices">
-      <button onclick="choiceWrong()">Nhaa🤔</button>
-      <button onclick="choiceRight()">Carino dai...hihihi🎉</button>
-    </div>
-  </div>
+<script>
+function go(a,b){
+  document.getElementById(a).classList.add('hidden');
+  document.getElementById(b).classList.remove('hidden');
+}
 
-  <!-- LIVELLO 6: messaggio finale -->
-  <div class="card hidden" id="lvl6">
-    <h1>🎉 Flavia...AUGUURI! +17 🎉</h1> 
-    <p>Un altro capitolo sta per iniziare 🏆<br>Certo, non potrà esser bello come lo scorso, in cui ho fatto capolino io (hihihi), ma proveremo a renderlo memorabile...<br> AUGURI BELLISSIMA 🌟💙🫶🏻</p>
-    <button onclick="spawnFinalElements()">🎆 Guarda! 🎆</button>
-  </div>
+/* PUNTINI */
+let step=1;
+function hit(n){
+  if(n!==step) return;
+  step++;
+  if(step===4) setTimeout(()=>go('lvl2','lvl3'),500);
+}
 
-  <script>
-    function goTo(from,to){
-      document.getElementById(from).classList.add('hidden');
-      document.getElementById(to).classList.remove('hidden');
-    }
+/* MATEMATICA */
+function wrong(){
+  document.getElementById('mathMsg').textContent='Mh… riprova, so che puoi 😏';
+}
+function rightMath(){
+  document.getElementById('mathMsg').textContent='Perfetto! Sapevo ce l’avresti fatta 😎';
+  setTimeout(()=>go('lvl3','lvl4'),800);
+}
 
-    /* Puntini */
-    let currentDot=1;
-    const canvas=document.getElementById('lineCanvas');
-    const ctx=canvas.getContext('2d');
-    let lastPos=null;
-    function hitDot(n){
-      if(n!==currentDot) return;
-      const dot=event.target;
-      const rect=dot.getBoundingClientRect();
-      const parent=dot.parentElement.getBoundingClientRect();
-      const x=rect.left-parent.left+11;
-      const y=rect.top-parent.top+11;
-      if(lastPos){ ctx.beginPath(); ctx.moveTo(lastPos.x,lastPos.y); ctx.lineTo(x,y); ctx.strokeStyle='#2575fc'; ctx.lineWidth=4; ctx.stroke(); }
-      lastPos={x,y};
-      currentDot++;
-      if(currentDot===4){setTimeout(()=>goTo('lvl2','lvl3'),600);}
-    }
+/* TAP GAME */
+function startTap(){
+  const grid=document.getElementById('tapGrid');
+  const msg=document.getElementById('tapMsg');
+  grid.innerHTML='';
+  msg.textContent='';
+  let hits=0;
 
-    /* Matematica */
-    function mathWrong(){ document.getElementById('mathMsg').textContent='Mh… riprova, so che puoi 😏'; }
-    function mathRight(){ 
-      document.getElementById('mathMsg').textContent='Perfetto! Sapevo ce l’avresti fatta 😎'; 
-      setTimeout(()=>goTo('lvl3','lvl4'),900); 
-    }
-
-    /* Tap rapido fulmini - livello 4 */
-    function startTapGame(){
-      const grid=document.getElementById('tapGrid');
-      const scoreDisplay=document.getElementById('tapScore');
-      grid.innerHTML='';
-      scoreDisplay.textContent='';
-      let hits=0;
-      const total=8;
-      let timeout;
-
-      for(let i=0;i<total;i++){
-        const bolt=document.createElement('button');
-        bolt.textContent='⚡';
-        bolt.style.position='absolute';
-        bolt.style.top=Math.random()*160+'px';
-        bolt.style.left=Math.random()*320+'px';
-        bolt.style.fontSize='2rem';
-        bolt.style.border='none';
-        bolt.style.background='transparent';
-        bolt.style.cursor='pointer';
-        bolt.addEventListener('click',()=>{
-          hits++;
-          bolt.remove();
-          scoreDisplay.textContent=`Fulmini cliccati: ${hits}`;
-        });
-        grid.appendChild(bolt);
+  for(let i=0;i<6;i++){
+    const b=document.createElement('button');
+    b.textContent='⚡';
+    b.style.position='absolute';
+    b.style.left=Math.random()*80+'%';
+    b.style.top=Math.random()*70+'%';
+    b.style.background='transparent';
+    b.style.border='none';
+    b.style.fontSize='2rem';
+    b.onclick=()=>{
+      hits++;
+      b.remove();
+      if(hits>=3){
+        msg.textContent='Perfetto! 😄';
+        setTimeout(()=>go('lvl4','lvl5'),700);
       }
+    };
+    grid.appendChild(b);
+  }
+}
 
-      // Timer 10 secondi
-      timeout=setTimeout(()=>{
-        scoreDisplay.textContent=`Tempo scaduto! Fulmini cliccati: ${hits}`;
-        setTimeout(()=>goTo('lvl4','lvl5'),1500);
-      },10000);
-    }
+const obs=new MutationObserver(()=>{
+  if(!lvl4.classList.contains('hidden')) startTap();
+});
+obs.observe(lvl4,{attributes:true});
 
-    const lvl4=document.getElementById('lvl4');
-    new MutationObserver(mutations=>{
-      mutations.forEach(m=>{
-        if(m.target.id==='lvl4' && !lvl4.classList.contains('hidden')){
-          startTapGame();
-        }
-      });
-    }).observe(lvl4,{attributes:true,attributeFilter:['class']});
+/* SCELTA */
+function choiceWrong(){ alert('Mh… ripensaci 😏'); }
+function choiceRight(){ go('lvl5','lvl6'); }
 
-    /* Scelta simpatica */
-    function choiceWrong(){ alert('Mh… prova ancora 😏'); }
-    function choiceRight(){ goTo('lvl5','lvl6'); }
-
-    /* Pagina finale - animazioni controllate */
-    function spawnFinalElements(){
-      const emojis=['🫶🏻'];
-      const hearts=['💙'];
-      const bolts=['⚡'];
-      const n=20;
-
-      for(let i=0;i<n;i++){
-        // fulmini
-        const bolt=document.createElement('div');
-        bolt.className='lightning';
-        bolt.textContent=bolts[Math.floor(Math.random()*bolts.length)];
-        bolt.style.left=Math.random()*100+'vw';
-        bolt.style.animationDuration=(2+Math.random()*2)+'s';
-        document.body.appendChild(bolt);
-        setTimeout(()=>bolt.remove(),5000);
-
-        // cuori
-        const heart=document.createElement('div');
-        heart.className='heart';
-        heart.textContent=hearts[Math.floor(Math.random()*hearts.length)];
-        heart.style.left=Math.random()*100+'vw';
-        document.body.appendChild(heart);
-        setTimeout(()=>heart.remove(),5000);
-
-        // emoji
-        const emoji=document.createElement('div');
-        emoji.className='emoji';
-        emoji.textContent=emojis[Math.floor(Math.random()*emojis.length)];
-        emoji.style.left=Math.random()*100+'vw';
-        document.body.appendChild(emoji);
-        setTimeout(()=>emoji.remove(),5000);
-      }
-    }
-  </script>
+/* FINALE */
+function finale(){
+  const emojis=['⚡','💙','🫶🏻'];
+  for(let i=0;i<25;i++){
+    const e=document.createElement('div');
+    e.className='fall';
+    e.textContent=emojis[Math.floor(Math.random()*emojis.length)];
+    e.style.left=Math.random()*100+'vw';
+    e.style.animationDuration=(3+Math.random()*3)+'s';
+    document.body.appendChild(e);
+    setTimeout(()=>e.remove(),6000);
+  }
+}
+</script>
 
 </body>
 </html>
