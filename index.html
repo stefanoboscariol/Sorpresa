@@ -1,0 +1,1884 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>✨ SORPRESA PER FLA ✨</title>
+  <style>
+    * { 
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+    
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      height: -webkit-fill-available;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #5C1A33;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      color: #2C1810;
+      overflow: hidden;
+      position: relative;
+    }
+    
+    html {
+      height: -webkit-fill-available;
+    }
+
+    /* Canvas di sfondo animato */
+    #bgCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+    }
+
+    .card {
+      background: #FFF8E7;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      padding: clamp(1.5rem, 5vw, 2.5rem) clamp(1.2rem, 4vw, 2rem);
+      border-radius: clamp(16px, 4vw, 24px);
+      border: 2px solid #E8D5B7;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3), 0 0 100px rgba(92, 26, 51, 0.2);
+      max-width: min(420px, 90vw);
+      width: 90%;
+      text-align: center;
+      animation: cardFloat 3s ease-in-out infinite;
+      position: relative;
+      z-index: 10;
+      transform-style: preserve-3d;
+      /* Aggiunte per transizioni */
+      transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+
+    @keyframes cardFloat {
+      0%, 100% { transform: translateY(0px) rotateX(0deg); }
+      50% { transform: translateY(-10px) rotateX(2deg); }
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: linear-gradient(45deg, #D4A5A5, #A8C5A2, #D4A5A5);
+      border-radius: inherit;
+      opacity: 0;
+      z-index: -1;
+      animation: borderGlow 3s ease-in-out infinite;
+      filter: blur(10px);
+    }
+
+    @keyframes borderGlow {
+      0%, 100% { opacity: 0; }
+      50% { opacity: 0.5; }
+    }
+
+    h1 { 
+      font-size: clamp(1.6rem, 5vw, 2.2rem);
+      margin-bottom: 1rem;
+      background: linear-gradient(45deg, #8B5A7C, #7A9D7A, #8B5A7C);
+      background-size: 200% 200%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: gradientShift 3s ease infinite;
+      line-height: 1.2;
+      font-weight: 700;
+    }
+
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    
+    p {
+      font-size: clamp(0.9rem, 3.5vw, 1.05rem);
+      line-height: 1.6;
+      margin-bottom: 1rem;
+      color: #4A3C31;
+      text-shadow: none;
+    }
+
+    button {
+      background: linear-gradient(135deg, #A88FA1 0%, #8B6D7C 100%);
+      border: none;
+      color: white;
+      font-size: clamp(0.9rem, 3.5vw, 1rem);
+      padding: clamp(0.6rem, 2.5vw, 0.7rem) clamp(1.2rem, 4vw, 1.4rem);
+      border-radius: 999px;
+      cursor: pointer;
+      box-shadow: 0 8px 30px rgba(139, 109, 124, 0.4);
+      margin-top: 0.5rem;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      touch-action: manipulation;
+      min-height: 44px;
+      position: relative;
+      overflow: hidden;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    button::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+      transform: translate(-50%, -50%);
+      transition: width 0.6s, height 0.6s;
+    }
+
+    button:hover::before {
+      width: 300px;
+      height: 300px;
+    }
+
+    button:active {
+      transform: scale(0.95);
+      box-shadow: 0 4px 15px rgba(139, 109, 124, 0.3);
+    }
+
+    /* NUOVA CLASSE PER TRANSIZIONI */
+    .card.transitioning-out {
+      opacity: 0;
+      transform: scale(0.8) rotateY(90deg);
+      animation: none;
+    }
+
+    .card.transitioning-in {
+      opacity: 0;
+      transform: scale(1.2) rotateY(-90deg);
+      animation: none;
+    }
+
+    .hidden { 
+      display: none;
+    }
+    
+    .choices {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.7rem;
+      justify-content: center;
+    }
+    
+    .choices button {
+      flex: 1 1 auto;
+      min-width: 90px;
+      margin: 0;
+    }
+
+    /* Livello 1: Particelle magnetiche */
+    #particleCanvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      cursor: crosshair;
+    }
+
+    .particle-text {
+      font-size: clamp(0.85rem, 3vw, 0.95rem);
+      color: #6B5A4D;
+      margin-top: 1rem;
+    }
+
+    /* Livello 2: Puzzle rotante 3D */
+    .puzzle-container {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.5rem;
+      margin: 1rem auto;
+      max-width: 280px;
+      perspective: 1000px;
+    }
+
+    .puzzle-piece {
+      aspect-ratio: 1;
+      background: linear-gradient(135deg, rgba(212, 165, 165, 0.3), rgba(168, 197, 162, 0.3));
+      border: 2px solid #C5A899;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: clamp(1.5rem, 5vw, 2rem);
+      transform-style: preserve-3d;
+      user-select: none;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .puzzle-piece:hover {
+      transform: rotateY(180deg) scale(1.1);
+      box-shadow: 0 0 30px rgba(168, 197, 162, 0.6);
+    }
+
+    /* NUOVA ANIMAZIONE PER CARTA CORRETTA */
+    .puzzle-piece.correct {
+      background: linear-gradient(135deg, rgba(168, 197, 162, 0.7), rgba(212, 165, 165, 0.7));
+      animation: correctPulseEnhanced 0.8s ease;
+      pointer-events: none;
+      box-shadow: 0 0 40px rgba(168, 197, 162, 0.9), 0 0 80px rgba(212, 165, 165, 0.6);
+    }
+
+    /* Effetto particelle quando si clicca la carta giusta */
+    .puzzle-piece.correct::before {
+      content: '✨';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 3rem;
+      animation: sparkle 0.6s ease-out;
+      pointer-events: none;
+    }
+
+    @keyframes correctPulseEnhanced {
+      0% { 
+        transform: scale(1) rotate(0deg); 
+        filter: brightness(1);
+      }
+      25% { 
+        transform: scale(1.3) rotate(10deg); 
+        filter: brightness(1.5) saturate(1.5);
+      }
+      50% { 
+        transform: scale(0.9) rotate(-5deg); 
+        filter: brightness(1.2);
+      }
+      75% { 
+        transform: scale(1.15) rotate(5deg); 
+        filter: brightness(1.3);
+      }
+      100% { 
+        transform: scale(1) rotate(0deg); 
+        filter: brightness(1.1);
+      }
+    }
+
+    @keyframes sparkle {
+      0% { 
+        opacity: 0; 
+        transform: translate(-50%, -50%) scale(0) rotate(0deg); 
+      }
+      50% { 
+        opacity: 1; 
+        transform: translate(-50%, -50%) scale(1.5) rotate(180deg); 
+      }
+      100% { 
+        opacity: 0; 
+        transform: translate(-50%, -50%) scale(0.5) rotate(360deg); 
+      }
+    }
+
+    /* Livello 3: Memory card con effetto flip */
+    .memory-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.5rem;
+      margin: 1rem auto;
+      max-width: 320px;
+    }
+
+    .memory-card {
+      aspect-ratio: 1;
+      background: linear-gradient(135deg, rgba(212, 165, 165, 0.2), rgba(168, 197, 162, 0.2));
+      border: 2px solid #C5A899;
+      border-radius: 12px;
+      cursor: pointer;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.6s;
+    }
+
+    .memory-card.flipped {
+      transform: rotateY(180deg);
+    }
+
+    .memory-card .front,
+    .memory-card .back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: clamp(1.5rem, 5vw, 2rem);
+      border-radius: 10px;
+    }
+
+    .memory-card .back {
+      transform: rotateY(180deg);
+    }
+
+    /* Livello 4: Raccolta stelle cadenti */
+    #starField {
+      position: relative;
+      width: 100%;
+      height: clamp(180px, 40vh, 250px);
+      border: 2px solid #C5A899;
+      border-radius: clamp(12px, 3vw, 16px);
+      margin: 1rem 0;
+      overflow: hidden;
+      background: rgba(255, 248, 231, 0.3);
+    }
+
+    .star {
+      position: absolute;
+      font-size: clamp(1.5rem, 5vw, 2rem);
+      cursor: pointer;
+      animation: starFall linear;
+      text-shadow: 0 0 10px currentColor;
+      transition: transform 0.2s;
+    }
+
+    .star:active {
+      transform: scale(1.5) rotate(360deg);
+    }
+
+    @keyframes starFall {
+      from { 
+        transform: translateY(-50px) rotate(0deg);
+        opacity: 1;
+      }
+      to { 
+        transform: translateY(calc(100% + 50px)) rotate(360deg);
+        opacity: 0.5;
+      }
+    }
+
+    /* Livello finale: Fireworks */
+    #fireworksCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 100;
+    }
+
+    .final-message {
+      animation: finalReveal 1s ease-out;
+    }
+
+    @keyframes finalReveal {
+      from { 
+        opacity: 0;
+        transform: scale(0.5) rotateX(-90deg);
+      }
+      to { 
+        opacity: 1;
+        transform: scale(1) rotateX(0deg);
+      }
+    }
+
+    #tapScore {
+      font-weight: bold;
+      font-size: clamp(1rem, 4vw, 1.1rem);
+      color: #7A9D7A;
+      min-height: 1.5rem;
+      text-shadow: 0 0 10px rgba(122, 157, 122, 0.4);
+    }
+
+    /* Effetto particelle fluttuanti */
+    .float-particle {
+      position: fixed;
+      width: 4px;
+      height: 4px;
+      background: rgba(255, 248, 231, 0.6);
+      border-radius: 50%;
+      pointer-events: none;
+      opacity: 0.6;
+      animation: floatAround 20s infinite;
+      z-index: 1;
+      will-change: transform;
+    }
+
+    @keyframes floatAround {
+      0% { transform: translate(0, 0); }
+      25% { transform: translate(100px, -100px); }
+      50% { transform: translate(-100px, -200px); }
+      75% { transform: translate(150px, -150px); }
+      100% { transform: translate(0, 0); }
+    }
+
+    @keyframes floatUp {
+      from { transform: translateY(0) rotate(0deg); opacity: 1; }
+      to { transform: translateY(-120vh) rotate(720deg); opacity: 0; }
+    }
+
+    @keyframes collectPop {
+      0% { transform: translateY(0) scale(1); opacity: 1; }
+      100% { transform: translateY(-50px) scale(1.5); opacity: 0; }
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+
+    /* Ottimizzazione performance per Android */
+    * {
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .card, .puzzle-piece, .memory-card, .star {
+      will-change: transform;
+      -webkit-transform: translateZ(0);
+      transform: translateZ(0);
+    }
+  </style>
+</head>
+
+<body>
+<canvas id="bgCanvas"></canvas>
+
+<!-- LIVELLO 1: Intro con particelle -->
+<div class="card" id="lvl1">
+  <h1>✨ Ciao Flavietta! ✨</h1>
+  <p>Preparati a qualcosa di <b>speciale</b>...<br>Questa volta ho preparato una sorpresa <b>diversa</b> 🎨</p>
+  <button onclick="goTo('lvl1','lvl1b')">Sono pronta! 🚀</button>
+</div>
+
+<!-- LIVELLO 1B: Messaggio simpatico -->
+<div class="card hidden" id="lvl1b">
+  <h1>🎮 Attenzione!</h1>
+  <p>Quello che stai per affrontare è un percorso epico di <b>7 livelli</b> 🏆</p>
+  <p>Dovrai usare:</p>
+  <p style="font-size: clamp(1.1rem, 4vw, 1.3rem); line-height: 1.8;">
+    🧠 La tua <b>intelligenza</b><br>
+    ⚡ I tuoi <b>riflessi</b><br>
+    🎯 La tua <b>precisione</b><br>
+    💪 La tua <b>determinazione</b>
+  </p>
+  <p style="margin-top: 1.5rem;"><small>(Ok forse esagero, ma sembrava figo 😂)</small></p>
+  <button onclick="goTo('lvl1b','lvl2')">Iniziamo davvero! 💪</button>
+</div>
+
+<!-- LIVELLO 2: Attira le particelle -->
+<div class="card hidden" id="lvl2">
+  <h1>🌟 Livello 1: Magia</h1>
+  <p>Muovi il dito/mouse sullo schermo<br>e osserva la magia ✨</p>
+  <canvas id="particleCanvas" width="300" height="200"></canvas>
+  <p class="particle-text">Quando sei pronta...</p>
+  <button onclick="goTo('lvl2','lvl3')">Avanti! 💫</button>
+</div>
+
+<!-- LIVELLO 3: Puzzle emoji 3D -->
+<div class="card hidden" id="lvl3">
+  <h1>🎯 Livello 2: Trova le Coppie</h1>
+  <p>Clicca gli emoji nell'ordine giusto:<br><b>🎂 → 🎁 → 🎉</b></p>
+  <div class="puzzle-container" id="puzzleContainer"></div>
+  <p id="puzzleMsg"></p>
+</div>
+
+<!-- LIVELLO 4: Memory game -->
+<div class="card hidden" id="lvl4">
+  <h1>🧠 Livello 3: Memory</h1>
+  <p>Trova le 4 coppie di emoji!</p>
+  <div class="memory-grid" id="memoryGrid"></div>
+  <p id="memoryMsg">Coppie trovate: <span id="pairsFound">0</span>/4</p>
+</div>
+
+<!-- LIVELLO 5: Catch falling stars -->
+<div class="card hidden" id="lvl5">
+  <h1>⭐ Livello 4: Acchiappa!</h1>
+  <p>Raccogli più stelle possibile ⭐</p>
+  <p id="starTimer" style="font-size: clamp(1.2rem, 5vw, 1.5rem); font-weight: bold; color: #8B5A7C; text-shadow: 0 0 10px rgba(139, 90, 124, 0.3); margin: 0.5rem 0;">30</p>
+  <div id="starField"></div>
+  <p id="tapScore">Stelle: 0</p>
+</div>
+
+<!-- LIVELLO 5B: Trova il Tesoro -->
+<div class="card hidden" id="lvl5b">
+  <h1>🗺️ Livello 5: Caccia al Tesoro</h1>
+  <p>Clicca sulla mappa per trovare i <b>5 tesori nascosti</b>! 💎</p>
+  <p id="treasureCount" style="font-size: clamp(1.1rem, 4vw, 1.3rem); font-weight: bold; color: #D4A86A; margin: 0.5rem 0;">Tesori trovati: <span id="foundCount">0</span>/5</p>
+  <canvas id="treasureCanvas" style="
+    width: 100%;
+    max-width: 350px;
+    height: clamp(300px, 50vh, 400px);
+    border: 2px solid #C5A899;
+    border-radius: clamp(12px, 3vw, 16px);
+    margin: 1rem auto;
+    display: block;
+    background: linear-gradient(135deg, #E8D5B7 0%, #D4C4A8 50%, #C5B299 100%);
+    touch-action: none;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+  "></canvas>
+  <p style="font-size: 0.85rem; color: #6B5A4D; margin-top: 0.5rem;"><i>Suggerimento: Guarda dove brillano le stelle! ✨</i></p>
+</div>
+
+<!-- LIVELLO 5C: Arkanoid -->
+<div class="card hidden" id="lvl5c">
+  <h1>🎮 Livello 6: Arkanoid!</h1>
+  <p>Distruggi tutti i blocchi! 🧱</p>
+  <p id="arkanoidScore" style="font-size: clamp(1rem, 4vw, 1.2rem); font-weight: bold; color: #7A9D7A; text-shadow: 0 0 10px rgba(122, 157, 122, 0.3);">Blocchi: <span id="blocksLeft">12</span></p>
+  <canvas id="arkanoidCanvas" style="
+    width: 100%;
+    max-width: 350px;
+    height: clamp(300px, 50vh, 400px);
+    border: 2px solid #C5A899;
+    border-radius: clamp(12px, 3vw, 16px);
+    margin: 1rem auto;
+    display: block;
+    background: rgba(255, 248, 231, 0.3);
+    touch-action: none;
+  "></canvas>
+  <p style="font-size: 0.85rem; color: #6B5A4D;"><i>Muovi il dito per controllare la barra! 👆</i></p>
+</div>
+
+<!-- LIVELLO FINALE -->
+<div class="card hidden" id="lvl6">
+  <div class="final-message">
+    <h1>🎊 AUGURI FLA 🎊</h1>
+    <p>
+      Un altro capitolo sta per iniziare 🏆<br>
+      Non potrà esser bello come lo scorso,<br>
+      in cui ho fatto capolino io (hihihi),<br>
+      ma proveremo a renderlo <b>indimenticabile</b> 💙🫶🏻
+    </p>
+    <p style="margin-top: 1.5rem;">
+      <em>Preparati per il gran finale...</em>
+    </p>
+    <button onclick="startFireworks()">🎆 CLICCA QUI 🎆</button>
+  </div>
+</div>
+
+<canvas id="fireworksCanvas"></canvas>
+
+<script>
+  // Sfondo animato con gradiente borgogna - OTTIMIZZATO
+  const bgCanvas = document.getElementById('bgCanvas');
+  const bgCtx = bgCanvas.getContext('2d', { alpha: false });
+  
+  function resizeBg() {
+    bgCanvas.width = window.innerWidth;
+    bgCanvas.height = window.innerHeight;
+  }
+  resizeBg();
+  window.addEventListener('resize', resizeBg);
+
+  let hue = 0;
+  let lastBgFrame = 0;
+  function animateBg(timestamp) {
+    // Limita a 30 FPS per performance
+    if (timestamp - lastBgFrame < 33) {
+      requestAnimationFrame(animateBg);
+      return;
+    }
+    lastBgFrame = timestamp;
+
+    hue += 0.3;
+    const gradient = bgCtx.createLinearGradient(0, 0, bgCanvas.width, bgCanvas.height);
+    gradient.addColorStop(0, `hsl(${330 + Math.sin(hue * 0.01) * 10}, 55%, 25%)`);
+    gradient.addColorStop(0.5, `hsl(${335 + Math.sin(hue * 0.015) * 10}, 50%, 20%)`);
+    gradient.addColorStop(1, `hsl(${340 + Math.sin(hue * 0.02) * 10}, 45%, 18%)`);
+    bgCtx.fillStyle = gradient;
+    bgCtx.fillRect(0, 0, bgCanvas.width, bgCanvas.height);
+    requestAnimationFrame(animateBg);
+  }
+  animateBg(0);
+
+  // Aggiungi particelle fluttuanti - RIDOTTE PER PERFORMANCE
+  for (let i = 0; i < 20; i++) {
+    const particle = document.createElement('div');
+    particle.className = 'float-particle';
+    particle.style.left = Math.random() * 100 + 'vw';
+    particle.style.top = Math.random() * 100 + 'vh';
+    particle.style.animationDelay = Math.random() * 20 + 's';
+    particle.style.animationDuration = (15 + Math.random() * 10) + 's';
+    document.body.appendChild(particle);
+  }
+
+  // FUNZIONE TRANSIZIONE MIGLIORATA
+  function goTo(from, to) {
+    const fromCard = document.getElementById(from);
+    const toCard = document.getElementById(to);
+    
+    // Animazione di uscita
+    fromCard.classList.add('transitioning-out');
+    
+    setTimeout(() => {
+      fromCard.classList.add('hidden');
+      fromCard.classList.remove('transitioning-out');
+      
+      // Prepara carta entrante
+      toCard.classList.remove('hidden');
+      toCard.classList.add('transitioning-in');
+      
+      // Forza reflow
+      void toCard.offsetWidth;
+      
+      // Animazione di entrata
+      requestAnimationFrame(() => {
+        toCard.classList.remove('transitioning-in');
+      });
+    }, 500);
+  }
+
+  // LIVELLO 2: Particelle magnetiche interattive - OTTIMIZZATO
+  const particleCanvas = document.getElementById('particleCanvas');
+  const pCtx = particleCanvas.getContext('2d');
+  let particles = [];
+  let mouse = { x: 0, y: 0 };
+  let particleAnimationFrame;
+
+  function resizeParticleCanvas() {
+    const rect = particleCanvas.parentElement.getBoundingClientRect();
+    particleCanvas.width = rect.width - 40;
+    particleCanvas.height = 200;
+    initParticles();
+  }
+
+  function initParticles() {
+    particles = [];
+    for (let i = 0; i < 40; i++) { // Ridotto da 50 a 40
+      particles.push({
+        x: Math.random() * particleCanvas.width,
+        y: Math.random() * particleCanvas.height,
+        vx: (Math.random() - 0.5) * 2,
+        vy: (Math.random() - 0.5) * 2,
+        radius: Math.random() * 3 + 1,
+        color: `hsl(${Math.random() * 60 + 320}, 50%, 70%)`
+      });
+    }
+  }
+
+  particleCanvas.addEventListener('mousemove', (e) => {
+    const rect = particleCanvas.getBoundingClientRect();
+    mouse.x = e.clientX - rect.left;
+    mouse.y = e.clientY - rect.top;
+  }, { passive: true });
+
+  particleCanvas.addEventListener('touchmove', (e) => {
+    e.preventDefault();
+    const rect = particleCanvas.getBoundingClientRect();
+    mouse.x = e.touches[0].clientX - rect.left;
+    mouse.y = e.touches[0].clientY - rect.top;
+  });
+
+  let lastParticleFrame = 0;
+  function animateParticles(timestamp) {
+    if (document.getElementById('lvl2').classList.contains('hidden')) {
+      return;
+    }
+
+    // Limita a 30 FPS
+    if (timestamp - lastParticleFrame < 33) {
+      particleAnimationFrame = requestAnimationFrame(animateParticles);
+      return;
+    }
+    lastParticleFrame = timestamp;
+
+    pCtx.fillStyle = 'rgba(255, 248, 231, 0.1)';
+    pCtx.fillRect(0, 0, particleCanvas.width, particleCanvas.height);
+
+    particles.forEach(p => {
+      const dx = mouse.x - p.x;
+      const dy = mouse.y - p.y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      
+      if (dist < 100) {
+        p.vx += dx * 0.001;
+        p.vy += dy * 0.001;
+      }
+
+      p.x += p.vx;
+      p.y += p.vy;
+      p.vx *= 0.99;
+      p.vy *= 0.99;
+
+      if (p.x < 0 || p.x > particleCanvas.width) p.vx *= -1;
+      if (p.y < 0 || p.y > particleCanvas.height) p.vy *= -1;
+
+      pCtx.beginPath();
+      pCtx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+      pCtx.fillStyle = p.color;
+      pCtx.fill();
+
+      // Ridotte connessioni per performance
+      particles.forEach(p2 => {
+        if (p2 === p) return;
+        const dx2 = p2.x - p.x;
+        const dy2 = p2.y - p.y;
+        const dist2 = Math.sqrt(dx2 * dx2 + dy2 * dy2);
+        if (dist2 < 40) { // Ridotto da 50 a 40
+          pCtx.beginPath();
+          pCtx.moveTo(p.x, p.y);
+          pCtx.lineTo(p2.x, p2.y);
+          pCtx.strokeStyle = `rgba(139, 90, 124, ${0.3 * (1 - dist2 / 40)})`;
+          pCtx.stroke();
+        }
+      });
+    });
+
+    particleAnimationFrame = requestAnimationFrame(animateParticles);
+  }
+
+  new MutationObserver(() => {
+    if (!document.getElementById('lvl2').classList.contains('hidden')) {
+      resizeParticleCanvas();
+      if (particleAnimationFrame) cancelAnimationFrame(particleAnimationFrame);
+      animateParticles(0);
+    }
+  }).observe(document.getElementById('lvl2'), { attributes: true });
+
+  // LIVELLO 3: Puzzle con ordine specifico - CON ANIMAZIONE MIGLIORATA
+  const puzzleEmojis = ['🎂', '🎁', '🎉', '🎈', '🎊', '🍰', '🎵', '💝', '🌟'];
+  const correctOrder = ['🎂', '🎁', '🎉'];
+  let puzzleClicks = [];
+
+  function initPuzzle() {
+    const container = document.getElementById('puzzleContainer');
+    container.innerHTML = '';
+    puzzleClicks = [];
+    
+    const shuffled = [...puzzleEmojis].sort(() => Math.random() - 0.5);
+    shuffled.forEach(emoji => {
+      const piece = document.createElement('div');
+      piece.className = 'puzzle-piece';
+      piece.textContent = emoji;
+      piece.onclick = () => checkPuzzle(emoji, piece);
+      container.appendChild(piece);
+    });
+  }
+
+  function checkPuzzle(emoji, element) {
+    if (element.classList.contains('correct')) return;
+    
+    puzzleClicks.push(emoji);
+    
+    if (emoji === correctOrder[puzzleClicks.length - 1]) {
+      element.classList.add('correct');
+      
+      // Crea effetto particelle esplosive
+      createPuzzleParticles(element);
+      
+      document.getElementById('puzzleMsg').textContent = `${puzzleClicks.length}/3 ✨`;
+      
+      if (puzzleClicks.length === 3) {
+        setTimeout(() => {
+          document.getElementById('puzzleMsg').textContent = 'Perfetto! 🎉';
+          setTimeout(() => goTo('lvl3', 'lvl4'), 1000);
+        }, 500);
+      }
+    } else {
+      puzzleClicks = [];
+      document.querySelectorAll('.puzzle-piece').forEach(p => p.classList.remove('correct'));
+      document.getElementById('puzzleMsg').textContent = 'Ordine sbagliato! Riprova 😊';
+      setTimeout(() => {
+        document.getElementById('puzzleMsg').textContent = '';
+      }, 1500);
+    }
+  }
+
+  // NUOVA FUNZIONE: Crea particelle quando si indovina
+  function createPuzzleParticles(element) {
+    const rect = element.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    
+    for (let i = 0; i < 12; i++) {
+      const particle = document.createElement('div');
+      particle.textContent = ['✨', '⭐', '💫', '🌟'][Math.floor(Math.random() * 4)];
+      particle.style.cssText = `
+        position: fixed;
+        left: ${centerX}px;
+        top: ${centerY}px;
+        font-size: ${15 + Math.random() * 10}px;
+        pointer-events: none;
+        z-index: 1000;
+      `;
+      document.body.appendChild(particle);
+      
+      const angle = (Math.PI * 2 * i) / 12;
+      const distance = 80 + Math.random() * 40;
+      const tx = Math.cos(angle) * distance;
+      const ty = Math.sin(angle) * distance;
+      
+      particle.animate([
+        { transform: 'translate(0, 0) scale(0) rotate(0deg)', opacity: 1 },
+        { transform: `translate(${tx}px, ${ty}px) scale(1) rotate(${360 + Math.random() * 360}deg)`, opacity: 0 }
+      ], {
+        duration: 800 + Math.random() * 400,
+        easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+      });
+      
+      setTimeout(() => particle.remove(), 1200);
+    }
+  }
+
+  new MutationObserver(() => {
+    if (!document.getElementById('lvl3').classList.contains('hidden')) {
+      initPuzzle();
+    }
+  }).observe(document.getElementById('lvl3'), { attributes: true });
+
+  // LIVELLO 4: Memory game
+  const memoryEmojis = ['💙', '🫶🏻', '🎂', '🎁', '💙', '🫶🏻', '🎂', '🎁'];
+  let flippedCards = [];
+  let matchedPairs = 0;
+
+  function initMemory() {
+    const grid = document.getElementById('memoryGrid');
+    grid.innerHTML = '';
+    flippedCards = [];
+    matchedPairs = 0;
+    document.getElementById('pairsFound').textContent = '0';
+    
+    const shuffled = [...memoryEmojis].sort(() => Math.random() - 0.5);
+    shuffled.forEach((emoji, index) => {
+      const card = document.createElement('div');
+      card.className = 'memory-card';
+      card.innerHTML = `
+        <div class="front">?</div>
+        <div class="back">${emoji}</div>
+      `;
+      card.dataset.emoji = emoji;
+      card.dataset.index = index;
+      card.onclick = () => flipCard(card);
+      grid.appendChild(card);
+    });
+  }
+
+  function flipCard(card) {
+    if (card.classList.contains('flipped') || flippedCards.length === 2) return;
+    
+    card.classList.add('flipped');
+    flippedCards.push(card);
+    
+    if (flippedCards.length === 2) {
+      setTimeout(() => {
+        if (flippedCards[0].dataset.emoji === flippedCards[1].dataset.emoji) {
+          matchedPairs++;
+          document.getElementById('pairsFound').textContent = matchedPairs;
+          flippedCards = [];
+          
+          if (matchedPairs === 4) {
+            setTimeout(() => {
+              document.getElementById('memoryMsg').textContent = 'Completato! 🎉';
+              setTimeout(() => goTo('lvl4', 'lvl5'), 1000);
+            }, 500);
+          }
+        } else {
+          flippedCards.forEach(c => c.classList.remove('flipped'));
+          flippedCards = [];
+        }
+      }, 800);
+    }
+  }
+
+  new MutationObserver(() => {
+    if (!document.getElementById('lvl4').classList.contains('hidden')) {
+      initMemory();
+    }
+  }).observe(document.getElementById('lvl4'), { attributes: true });
+
+  // LIVELLO 5: Catch falling stars - OTTIMIZZATO
+  let starGameInterval;
+  let starGameTimeout;
+  let starTimerInterval;
+  let starGameActive = false;
+
+  function startStarGame() {
+    if (starGameActive) return;
+    starGameActive = true;
+    
+    const field = document.getElementById('starField');
+    const score = document.getElementById('tapScore');
+    const timerDisplay = document.getElementById('starTimer');
+    
+    field.innerHTML = '';
+    let stars = 0;
+    let timeLeft = 30;
+
+    if (starGameInterval) clearInterval(starGameInterval);
+    if (starGameTimeout) clearTimeout(starGameTimeout);
+    if (starTimerInterval) clearInterval(starTimerInterval);
+
+    score.textContent = 'Stelle: 0';
+    timerDisplay.textContent = '30';
+    timerDisplay.style.color = '#8B5A7C';
+    timerDisplay.style.animation = 'none';
+
+    starTimerInterval = setInterval(() => {
+      timeLeft--;
+      timerDisplay.textContent = timeLeft;
+      
+      if (timeLeft <= 10) {
+        timerDisplay.style.color = '#A05A5A';
+        timerDisplay.style.animation = 'pulse 0.5s infinite';
+      }
+      
+      if (timeLeft <= 0) {
+        clearInterval(starTimerInterval);
+      }
+    }, 1000);
+
+    starGameInterval = setInterval(() => {
+      if (!starGameActive) return;
+      
+      const star = document.createElement('div');
+      star.className = 'star';
+      const starTypes = ['⭐', '✨', '💫', '🌟'];
+      star.textContent = starTypes[Math.random() * starTypes.length | 0];
+      
+      const fieldRect = field.getBoundingClientRect();
+      star.style.left = Math.random() * (fieldRect.width - 40) + 'px';
+      star.style.top = '-50px';
+      star.style.animationDuration = (2 + Math.random() * 2) + 's';
+      
+      let clicked = false;
+      
+      const tapHandler = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        if (!starGameActive || clicked) return;
+        clicked = true;
+        
+        stars++;
+        star.remove();
+        
+        const collectEffect = document.createElement('div');
+        collectEffect.textContent = '+1 ⭐';
+        collectEffect.style.cssText = `
+          position: absolute;
+          left: ${(e.clientX || e.touches[0].clientX)}px;
+          top: ${(e.clientY || e.touches[0].clientY)}px;
+          color: #D4A86A;
+          font-size: 1.5rem;
+          font-weight: bold;
+          pointer-events: none;
+          z-index: 1000;
+          animation: collectPop 0.6s ease-out forwards;
+        `;
+        document.body.appendChild(collectEffect);
+        setTimeout(() => collectEffect.remove(), 600);
+        
+        score.textContent = `Stelle: ${stars}`;
+      };
+      
+      star.onclick = tapHandler;
+      star.ontouchstart = tapHandler;
+      field.appendChild(star);
+      
+      setTimeout(() => {
+        if (star.parentNode) {
+          star.remove();
+        }
+      }, parseFloat(star.style.animationDuration) * 1000 + 100);
+    }, 600);
+
+    starGameTimeout = setTimeout(() => {
+      starGameActive = false;
+      clearInterval(starGameInterval);
+      clearInterval(starTimerInterval);
+      
+      field.innerHTML = '';
+      
+      timerDisplay.textContent = '0';
+      score.textContent = `Completato! Stelle: ${stars} ⭐`;
+      setTimeout(() => goTo('lvl5', 'lvl5b'), 2000);
+    }, 30000);
+  }
+
+  let starGameInitialized = false;
+  new MutationObserver(() => {
+    if (!document.getElementById('lvl5').classList.contains('hidden') && !starGameInitialized) {
+      starGameInitialized = true;
+      starGameActive = false;
+      setTimeout(startStarGame, 100);
+    }
+  }).observe(document.getElementById('lvl5'), { attributes: true });
+
+  // LIVELLO 5B: Caccia al Tesoro - Trova i tesori nascosti
+  let treasureActive = false;
+  let treasuresFound = 0;
+  let treasures = [];
+  let sparkles = [];
+  let treasureAnimationFrame;
+
+  function initTreasureHunt() {
+    if (treasureActive) return;
+    treasureActive = true;
+
+    const canvas = document.getElementById('treasureCanvas');
+    const ctx = canvas.getContext('2d', { alpha: false });
+    const foundCountDisplay = document.getElementById('foundCount');
+
+    function resizeTreasureCanvas() {
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width;
+      canvas.height = rect.height;
+      initTreasures();
+    }
+
+    resizeTreasureCanvas();
+
+    treasuresFound = 0;
+    foundCountDisplay.textContent = '0';
+
+    function initTreasures() {
+      treasures = [];
+      sparkles = [];
+      
+      // Genera 5 posizioni casuali per i tesori - evita sovrapposizioni
+      const minDistance = 80; // Distanza minima tra tesori
+      let attempts = 0;
+      const maxAttempts = 100;
+      
+      while (treasures.length < 5 && attempts < maxAttempts) {
+        attempts++;
+        const newTreasure = {
+          x: 60 + Math.random() * (canvas.width - 120),
+          y: 60 + Math.random() * (canvas.height - 120),
+          radius: 35,
+          found: false,
+          type: ['💎', '👑', '💰', '🏆', '⭐'][treasures.length],
+          pulsePhase: Math.random() * Math.PI * 2
+        };
+        
+        // Controlla distanza dagli altri tesori
+        let tooClose = false;
+        for (let t of treasures) {
+          const dist = Math.sqrt((t.x - newTreasure.x) ** 2 + (t.y - newTreasure.y) ** 2);
+          if (dist < minDistance) {
+            tooClose = true;
+            break;
+          }
+        }
+        
+        if (!tooClose) {
+          treasures.push(newTreasure);
+        }
+      }
+    }
+
+    // Particelle scintillanti sui tesori non trovati
+    function createSparkle(treasure) {
+      if (Math.random() < 0.08 && !treasure.found && sparkles.length < 100) {
+        const angle = Math.random() * Math.PI * 2;
+        const distance = Math.random() * treasure.radius;
+        sparkles.push({
+          x: treasure.x + Math.cos(angle) * distance,
+          y: treasure.y + Math.sin(angle) * distance,
+          life: 40,
+          maxLife: 40,
+          size: Math.random() * 2.5 + 1.5,
+          vx: (Math.random() - 0.5) * 1.5,
+          vy: (Math.random() - 0.5) * 1.5 - 0.5,
+          hue: 45 + Math.random() * 15
+        });
+      }
+    }
+
+    function drawBackground() {
+      // Sfondo mappa pergamena con pattern più visibile
+      const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+      gradient.addColorStop(0, '#E8D5B7');
+      gradient.addColorStop(0.5, '#D4C4A8');
+      gradient.addColorStop(1, '#C5B299');
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Texture pergamena più evidente
+      ctx.fillStyle = 'rgba(139, 115, 85, 0.05)';
+      for (let i = 0; i < 80; i++) {
+        const x = Math.random() * canvas.width;
+        const y = Math.random() * canvas.height;
+        const size = Math.random() * 4 + 1;
+        ctx.fillRect(x, y, size, size);
+      }
+
+      // Bordo decorativo
+      ctx.strokeStyle = 'rgba(139, 90, 124, 0.3)';
+      ctx.lineWidth = 3;
+      ctx.strokeRect(5, 5, canvas.width - 10, canvas.height - 10);
+
+      // Decorazioni angoli più grandi
+      ctx.font = 'bold 28px Arial';
+      ctx.fillStyle = 'rgba(139, 90, 124, 0.25)';
+      ctx.fillText('🗺️', 15, 35);
+      ctx.fillText('🗺️', canvas.width - 45, 35);
+      ctx.fillText('🗺️', 15, canvas.height - 10);
+      ctx.fillText('🗺️', canvas.width - 45, canvas.height - 10);
+    }
+
+    function drawSparkles() {
+      for (let i = sparkles.length - 1; i >= 0; i--) {
+        const s = sparkles[i];
+        s.x += s.vx;
+        s.y += s.vy;
+        s.life--;
+
+        if (s.life <= 0) {
+          sparkles.splice(i, 1);
+          continue;
+        }
+
+        const alpha = s.life / s.maxLife;
+        ctx.save();
+        ctx.globalAlpha = alpha;
+        
+        // Stella scintillante
+        const gradient = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, s.size * 2);
+        gradient.addColorStop(0, `hsl(${s.hue}, 100%, 80%)`);
+        gradient.addColorStop(0.5, `hsl(${s.hue}, 100%, 60%)`);
+        gradient.addColorStop(1, `hsl(${s.hue}, 100%, 40%)`);
+        
+        ctx.fillStyle = gradient;
+        ctx.shadowBlur = 8;
+        ctx.shadowColor = `hsl(${s.hue}, 100%, 60%)`;
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+        ctx.fill();
+        
+        // Forma a stella
+        ctx.fillStyle = '#FFE870';
+        ctx.beginPath();
+        for (let j = 0; j < 5; j++) {
+          const angle = (j * Math.PI * 2) / 5 - Math.PI / 2;
+          const x = s.x + Math.cos(angle) * s.size * 1.5;
+          const y = s.y + Math.sin(angle) * s.size * 1.5;
+          if (j === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
+        ctx.closePath();
+        ctx.fill();
+        
+        ctx.restore();
+      }
+    }
+
+    function drawTreasures() {
+      const time = Date.now();
+      
+      treasures.forEach(t => {
+        if (!t.found) {
+          createSparkle(t);
+          
+          // Pulse effect più evidente
+          t.pulsePhase += 0.08;
+          const pulse = Math.sin(t.pulsePhase) * 5 + 3;
+          const alphaPulse = Math.sin(t.pulsePhase) * 0.15 + 0.3;
+          
+          // Alone luminoso che pulsa
+          ctx.save();
+          ctx.globalAlpha = alphaPulse;
+          
+          const glowGradient = ctx.createRadialGradient(t.x, t.y, 0, t.x, t.y, t.radius + pulse + 10);
+          glowGradient.addColorStop(0, 'rgba(255, 215, 0, 0.6)');
+          glowGradient.addColorStop(0.5, 'rgba(255, 215, 0, 0.3)');
+          glowGradient.addColorStop(1, 'rgba(255, 215, 0, 0)');
+          ctx.fillStyle = glowGradient;
+          
+          ctx.shadowBlur = 25;
+          ctx.shadowColor = 'rgba(255, 215, 0, 0.8)';
+          ctx.beginPath();
+          ctx.arc(t.x, t.y, t.radius + pulse + 5, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+          
+          // Cerchio interno più visibile
+          ctx.save();
+          ctx.globalAlpha = 0.15;
+          ctx.fillStyle = '#FFD700';
+          ctx.beginPath();
+          ctx.arc(t.x, t.y, t.radius + pulse / 2, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+          
+          // Indicatore visivo aggiuntivo - X semi-trasparente
+          ctx.save();
+          ctx.strokeStyle = 'rgba(212, 168, 106, 0.4)';
+          ctx.lineWidth = 3;
+          ctx.lineCap = 'round';
+          const crossSize = 15;
+          ctx.beginPath();
+          ctx.moveTo(t.x - crossSize, t.y);
+          ctx.lineTo(t.x + crossSize, t.y);
+          ctx.moveTo(t.x, t.y - crossSize);
+          ctx.lineTo(t.x, t.y + crossSize);
+          ctx.stroke();
+          ctx.restore();
+        }
+      });
+    }
+
+    let lastFrame = 0;
+    function animate(timestamp) {
+      if (!treasureActive) return;
+
+      // Limita a 30 FPS
+      if (timestamp - lastFrame < 33) {
+        treasureAnimationFrame = requestAnimationFrame(animate);
+        return;
+      }
+      lastFrame = timestamp;
+
+      drawBackground();
+      drawTreasures();
+      drawSparkles();
+
+      treasureAnimationFrame = requestAnimationFrame(animate);
+    }
+
+    animate(0);
+
+    // Click handler migliorato
+    function handleClick(e) {
+      e.preventDefault();
+      const rect = canvas.getBoundingClientRect();
+      const clickX = (e.clientX || e.touches[0].clientX) - rect.left;
+      const clickY = (e.clientY || e.touches[0].clientY) - rect.top;
+
+      let foundTreasure = false;
+
+      treasures.forEach(t => {
+        if (!t.found) {
+          const dist = Math.sqrt((clickX - t.x) ** 2 + (clickY - t.y) ** 2);
+          
+          if (dist < t.radius) {
+            t.found = true;
+            foundTreasure = true;
+            treasuresFound++;
+            foundCountDisplay.textContent = treasuresFound;
+
+            // Esplosione di particelle più spettacolare
+            for (let i = 0; i < 50; i++) {
+              const angle = (Math.PI * 2 * i) / 50 + Math.random() * 0.2;
+              const speed = 2 + Math.random() * 4;
+              sparkles.push({
+                x: t.x,
+                y: t.y,
+                life: 70,
+                maxLife: 70,
+                size: Math.random() * 3 + 2,
+                vx: Math.cos(angle) * speed,
+                vy: Math.sin(angle) * speed,
+                hue: 40 + Math.random() * 20
+              });
+            }
+
+            // Mostra emoji del tesoro con posizione corretta
+            const treasureEmoji = document.createElement('div');
+            treasureEmoji.textContent = t.type;
+            treasureEmoji.style.cssText = `
+              position: fixed;
+              left: ${rect.left + t.x}px;
+              top: ${rect.top + t.y}px;
+              font-size: 3.5rem;
+              pointer-events: none;
+              z-index: 1000;
+              animation: treasureFound 1.2s ease-out forwards;
+              filter: drop-shadow(0 0 20px #FFD700);
+              transform: translate(-50%, -50%);
+            `;
+            document.body.appendChild(treasureEmoji);
+            setTimeout(() => treasureEmoji.remove(), 1200);
+
+            // Suono di successo simulato con vibrazione (se disponibile)
+            if (navigator.vibrate) {
+              navigator.vibrate([50, 30, 50]);
+            }
+
+            // Controlla vittoria
+            if (treasuresFound === 5) {
+              // Celebrazione finale
+              setTimeout(() => {
+                for (let i = 0; i < 100; i++) {
+                  setTimeout(() => {
+                    const x = Math.random() * canvas.width;
+                    const y = Math.random() * canvas.height;
+                    for (let j = 0; j < 10; j++) {
+                      const angle = (Math.PI * 2 * j) / 10;
+                      sparkles.push({
+                        x: x,
+                        y: y,
+                        life: 60,
+                        maxLife: 60,
+                        size: Math.random() * 3 + 1,
+                        vx: Math.cos(angle) * (2 + Math.random() * 2),
+                        vy: Math.sin(angle) * (2 + Math.random() * 2),
+                        hue: Math.random() * 60
+                      });
+                    }
+                  }, i * 15);
+                }
+              }, 300);
+
+              setTimeout(() => {
+                treasureActive = false;
+                if (treasureAnimationFrame) cancelAnimationFrame(treasureAnimationFrame);
+                goTo('lvl5b', 'lvl5c');
+              }, 2500);
+            }
+          }
+        }
+      });
+
+      // Feedback negativo se non si trova niente
+      if (!foundTreasure) {
+        const missEffect = document.createElement('div');
+        missEffect.textContent = '❌';
+        missEffect.style.cssText = `
+          position: fixed;
+          left: ${e.clientX || e.touches[0].clientX}px;
+          top: ${e.clientY || e.touches[0].clientY}px;
+          font-size: 1.5rem;
+          pointer-events: none;
+          z-index: 999;
+          animation: missFade 0.5s ease-out forwards;
+          transform: translate(-50%, -50%);
+          opacity: 0.6;
+        `;
+        document.body.appendChild(missEffect);
+        setTimeout(() => missEffect.remove(), 500);
+      }
+    }
+
+    canvas.addEventListener('click', handleClick);
+    canvas.addEventListener('touchstart', handleClick);
+  }
+
+  // Aggiungi animazioni CSS per tesoro trovato e miss
+  const treasureStyle = document.createElement('style');
+  treasureStyle.textContent = `
+    @keyframes treasureFound {
+      0% { 
+        transform: translate(-50%, -50%) scale(0) rotate(0deg); 
+        opacity: 1; 
+      }
+      40% { 
+        transform: translate(-50%, -50%) scale(1.3) rotate(180deg); 
+        opacity: 1; 
+      }
+      100% { 
+        transform: translate(-50%, -100px) scale(0.8) rotate(360deg); 
+        opacity: 0; 
+      }
+    }
+    @keyframes missFade {
+      0% { 
+        transform: translate(-50%, -50%) scale(1); 
+        opacity: 0.6; 
+      }
+      100% { 
+        transform: translate(-50%, -70px) scale(0.5); 
+        opacity: 0; 
+      }
+    }
+  `;
+  document.head.appendChild(treasureStyle);
+
+  let treasureInitialized = false;
+  new MutationObserver(() => {
+    if (!document.getElementById('lvl5b').classList.contains('hidden') && !treasureInitialized) {
+      treasureInitialized = true;
+      treasureActive = false;
+      setTimeout(initTreasureHunt, 100);
+    }
+  }).observe(document.getElementById('lvl5b'), { attributes: true });
+
+  // LIVELLO 5C: Arkanoid - OTTIMIZZATO
+  let arkanoidActive = false;
+  let arkanoidFrame;
+
+  function startArkanoid() {
+    if (arkanoidActive) return;
+    arkanoidActive = true;
+
+    const canvas = document.getElementById('arkanoidCanvas');
+    const ctx = canvas.getContext('2d', { alpha: false });
+    const blocksLeftDisplay = document.getElementById('blocksLeft');
+
+    function resizeArkanoid() {
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width;
+      canvas.height = rect.height;
+    }
+    resizeArkanoid();
+
+    const paddle = {
+      width: canvas.width * 0.25,
+      height: 12,
+      x: canvas.width / 2 - (canvas.width * 0.25) / 2,
+      y: canvas.height - 30,
+      speed: 0,
+      targetX: canvas.width / 2
+    };
+
+    const ball = {
+      x: canvas.width / 2,
+      y: canvas.height / 2,
+      radius: 6,
+      dx: 3,
+      dy: -3,
+      speed: 3
+    };
+
+    const blocks = [];
+    const blockRows = 3;
+    const blockCols = 4;
+    const blockWidth = (canvas.width - 40) / blockCols;
+    const blockHeight = 25;
+    const blockPadding = 5;
+    const blockOffsetTop = 40;
+    const blockOffsetLeft = 20;
+
+    const blockColors = ['#D4A5A5', '#A8C5A2', '#9BB5C8', '#C5A899'];
+
+    for (let row = 0; row < blockRows; row++) {
+      for (let col = 0; col < blockCols; col++) {
+        blocks.push({
+          x: blockOffsetLeft + col * (blockWidth + blockPadding),
+          y: blockOffsetTop + row * (blockHeight + blockPadding),
+          width: blockWidth - blockPadding,
+          height: blockHeight,
+          active: true,
+          color: blockColors[col]
+        });
+      }
+    }
+
+    let blocksRemaining = blocks.length;
+    blocksLeftDisplay.textContent = blocksRemaining;
+
+    function updatePaddlePosition(clientX) {
+      const rect = canvas.getBoundingClientRect();
+      paddle.targetX = clientX - rect.left - paddle.width / 2;
+      paddle.targetX = Math.max(0, Math.min(paddle.targetX, canvas.width - paddle.width));
+    }
+
+    canvas.addEventListener('touchmove', (e) => {
+      e.preventDefault();
+      updatePaddlePosition(e.touches[0].clientX);
+    });
+
+    canvas.addEventListener('mousemove', (e) => {
+      updatePaddlePosition(e.clientX);
+    }, { passive: true });
+
+    function drawPaddle() {
+      paddle.x += (paddle.targetX - paddle.x) * 0.2;
+
+      ctx.fillStyle = '#8B5A7C';
+      ctx.shadowBlur = 15;
+      ctx.shadowColor = '#8B5A7C';
+      ctx.fillRect(paddle.x, paddle.y, paddle.width, paddle.height);
+      ctx.shadowBlur = 0;
+
+      ctx.strokeStyle = '#C49BB3';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(paddle.x, paddle.y, paddle.width, paddle.height);
+    }
+
+    function drawBall() {
+      ctx.beginPath();
+      ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
+      ctx.fillStyle = '#FFFFFF';
+      ctx.shadowBlur = 20;
+      ctx.shadowColor = '#7A9D7A';
+      ctx.fill();
+      ctx.shadowBlur = 0;
+
+      ctx.strokeStyle = '#A8C5A2';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    }
+
+    function drawBlocks() {
+      blocks.forEach(block => {
+        if (block.active) {
+          ctx.fillStyle = block.color;
+          ctx.shadowBlur = 10;
+          ctx.shadowColor = block.color;
+          ctx.fillRect(block.x, block.y, block.width, block.height);
+          ctx.shadowBlur = 0;
+
+          ctx.strokeStyle = '#8B7355';
+          ctx.lineWidth = 2;
+          ctx.strokeRect(block.x, block.y, block.width, block.height);
+        }
+      });
+    }
+
+    const particles = [];
+    
+    function createParticle(x, y, color) {
+      particles.push({
+        x: x,
+        y: y,
+        vx: (Math.random() - 0.5) * 4,
+        vy: (Math.random() - 0.5) * 4,
+        life: 30,
+        color: color
+      });
+    }
+
+    function updateParticles() {
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.life--;
+        
+        if (p.life <= 0) {
+          particles.splice(i, 1);
+        } else {
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
+          ctx.fillStyle = p.color;
+          ctx.globalAlpha = p.life / 30;
+          ctx.fill();
+          ctx.globalAlpha = 1;
+        }
+      }
+    }
+
+    function checkCollisions() {
+      if (ball.x + ball.dx > canvas.width - ball.radius || ball.x + ball.dx < ball.radius) {
+        ball.dx = -ball.dx;
+      }
+      if (ball.y + ball.dy < ball.radius) {
+        ball.dy = -ball.dy;
+      }
+
+      if (
+        ball.y + ball.radius > paddle.y &&
+        ball.y - ball.radius < paddle.y + paddle.height &&
+        ball.x > paddle.x &&
+        ball.x < paddle.x + paddle.width
+      ) {
+        const hitPos = (ball.x - paddle.x) / paddle.width;
+        const angle = (hitPos - 0.5) * Math.PI / 3;
+        const speed = ball.speed;
+        ball.dx = Math.sin(angle) * speed;
+        ball.dy = -Math.abs(Math.cos(angle) * speed);
+      }
+
+      blocks.forEach(block => {
+        if (block.active) {
+          if (
+            ball.x > block.x &&
+            ball.x < block.x + block.width &&
+            ball.y > block.y &&
+            ball.y < block.y + block.height
+          ) {
+            ball.dy = -ball.dy;
+            block.active = false;
+            blocksRemaining--;
+            blocksLeftDisplay.textContent = blocksRemaining;
+
+            for (let i = 0; i < 8; i++) {
+              createParticle(ball.x, ball.y, block.color);
+            }
+
+            if (blocksRemaining === 0) {
+              setTimeout(() => {
+                arkanoidActive = false;
+                if (arkanoidFrame) cancelAnimationFrame(arkanoidFrame);
+                goTo('lvl5c', 'lvl6');
+              }, 1000);
+            }
+          }
+        }
+      });
+
+      if (ball.y + ball.radius > canvas.height) {
+        ball.x = canvas.width / 2;
+        ball.y = canvas.height / 2;
+        ball.dx = 3;
+        ball.dy = -3;
+      }
+    }
+
+    let lastArkanoidFrame = 0;
+    function gameLoop(timestamp) {
+      if (!arkanoidActive) return;
+
+      // Limita a 60 FPS
+      if (timestamp - lastArkanoidFrame < 16) {
+        arkanoidFrame = requestAnimationFrame(gameLoop);
+        return;
+      }
+      lastArkanoidFrame = timestamp;
+
+      ctx.fillStyle = 'rgba(255, 248, 231, 0.3)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ball.x += ball.dx;
+      ball.y += ball.dy;
+      checkCollisions();
+
+      drawBlocks();
+      drawPaddle();
+      drawBall();
+      updateParticles();
+
+      arkanoidFrame = requestAnimationFrame(gameLoop);
+    }
+
+    gameLoop(0);
+  }
+
+  let arkanoidInitialized = false;
+  new MutationObserver(() => {
+    if (!document.getElementById('lvl5c').classList.contains('hidden') && !arkanoidInitialized) {
+      arkanoidInitialized = true;
+      arkanoidActive = false;
+      if (arkanoidFrame) cancelAnimationFrame(arkanoidFrame);
+      setTimeout(startArkanoid, 100);
+    }
+  }).observe(document.getElementById('lvl5c'), { attributes: true });
+
+  // FINALE: Fuochi d'artificio
+  let fireworksActive = false;
+
+  function startFireworks() {
+    if (fireworksActive) return;
+    fireworksActive = true;
+    
+    const canvas = document.getElementById('fireworksCanvas');
+    const ctx = canvas.getContext('2d', { alpha: true });
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    canvas.style.display = 'block';
+
+    const fireworks = [];
+    const particles = [];
+
+    class Firework {
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = canvas.height;
+        this.targetY = Math.random() * canvas.height * 0.4 + canvas.height * 0.1;
+        this.speed = 4 + Math.random() * 3;
+        this.hue = 330 + Math.random() * 60;
+        this.trail = [];
+      }
+
+      update() {
+        this.trail.push({ x: this.x, y: this.y });
+        if (this.trail.length > 10) this.trail.shift();
+        
+        this.y -= this.speed;
+        if (this.y <= this.targetY) {
+          this.explode();
+          return false;
+        }
+        return true;
+      }
+
+      explode() {
+        const particleCount = 80 + Math.random() * 40;
+        for (let i = 0; i < particleCount; i++) {
+          particles.push(new Particle(this.x, this.y, this.hue));
+        }
+      }
+
+      draw() {
+        this.trail.forEach((pos, i) => {
+          ctx.beginPath();
+          ctx.arc(pos.x, pos.y, 2, 0, Math.PI * 2);
+          ctx.fillStyle = `hsla(${this.hue}, 50%, 70%, ${i / this.trail.length})`;
+          ctx.fill();
+        });
+        
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, 4, 0, Math.PI * 2);
+        ctx.fillStyle = `hsl(${this.hue}, 50%, 75%)`;
+        ctx.shadowBlur = 15;
+        ctx.shadowColor = `hsl(${this.hue}, 50%, 70%)`;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      }
+    }
+
+    class Particle {
+      constructor(x, y, hue) {
+        this.x = x;
+        this.y = y;
+        this.hue = hue + Math.random() * 40 - 20;
+        const angle = Math.random() * Math.PI * 2;
+        const speed = Math.random() * 5 + 3;
+        this.vx = Math.cos(angle) * speed;
+        this.vy = Math.sin(angle) * speed;
+        this.life = 100;
+        this.decay = Math.random() * 1.5 + 0.5;
+        this.gravity = 0.05;
+      }
+
+      update() {
+        this.vx *= 0.97;
+        this.vy *= 0.97;
+        this.vy += this.gravity;
+        this.x += this.vx;
+        this.y += this.vy;
+        this.life -= this.decay;
+        return this.life > 0;
+      }
+
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, 2.5, 0, Math.PI * 2);
+        ctx.fillStyle = `hsla(${this.hue}, 50%, 70%, ${this.life / 100})`;
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = `hsla(${this.hue}, 50%, 70%, ${this.life / 100})`;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      }
+    }
+
+    let frameCount = 0;
+
+    function animate() {
+      ctx.fillStyle = 'rgba(92, 26, 51, 0.15)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      frameCount++;
+      
+      if (Math.random() < 0.12 || (frameCount < 100 && Math.random() < 0.25)) {
+        fireworks.push(new Firework());
+      }
+
+      for (let i = fireworks.length - 1; i >= 0; i--) {
+        if (!fireworks[i].update()) {
+          fireworks.splice(i, 1);
+        } else {
+          fireworks[i].draw();
+        }
+      }
+
+      for (let i = particles.length - 1; i >= 0; i--) {
+        if (!particles[i].update()) {
+          particles.splice(i, 1);
+        } else {
+          particles[i].draw();
+        }
+      }
+
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+
+    setTimeout(() => {
+      const finalMsg = document.createElement('div');
+      finalMsg.style.cssText = `
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(0);
+        font-size: clamp(2rem, 8vw, 4rem);
+        font-weight: bold;
+        color: white;
+        text-shadow: 0 0 20px rgba(255, 255, 255, 0.8), 0 0 40px rgba(212, 165, 165, 0.6);
+        z-index: 102;
+        animation: finalPop 2s ease-out forwards;
+        text-align: center;
+        pointer-events: none;
+      `;
+      finalMsg.innerHTML = '🎉 BUON COMPLEANNO FLA! 🎉';
+      document.body.appendChild(finalMsg);
+
+      const style2 = document.createElement('style');
+      style2.textContent = `
+        @keyframes finalPop {
+          0% { transform: translate(-50%, -50%) scale(0) rotate(-180deg); opacity: 0; }
+          50% { transform: translate(-50%, -50%) scale(1.2) rotate(10deg); }
+          70% { transform: translate(-50%, -50%) scale(0.9) rotate(-5deg); }
+          100% { transform: translate(-50%, -50%) scale(1) rotate(0deg); opacity: 1; }
+        }
+      `;
+      document.head.appendChild(style2);
+
+      setTimeout(() => {
+        finalMsg.style.animation = 'finalPop 1s ease-out reverse forwards';
+        setTimeout(() => finalMsg.remove(), 1000);
+      }, 4000);
+    }, 1500);
+
+    setTimeout(() => {
+      for (let i = 0; i < 30; i++) {
+        setTimeout(() => {
+          const emoji = document.createElement('div');
+          emoji.style.cssText = `
+            position: fixed;
+            font-size: ${20 + Math.random() * 30}px;
+            left: ${Math.random() * 100}vw;
+            top: -50px;
+            z-index: 101;
+            animation: floatUp ${3 + Math.random() * 2}s linear;
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
+            pointer-events: none;
+          `;
+          emoji.textContent = ['💙', '🫶🏻', '✨', '🎉', '🎊', '🎁', '🎂'][Math.random() * 7 | 0];
+          document.body.appendChild(emoji);
+          setTimeout(() => emoji.remove(), 5000);
+        }, i * 150);
+      }
+    }, 2500);
+
+    setTimeout(() => {
+      for (let i = 0; i < 50; i++) {
+        setTimeout(() => {
+          const confetti = document.createElement('div');
+          const isLeft = Math.random() > 0.5;
+          confetti.style.cssText = `
+            position: fixed;
+            width: ${5 + Math.random() * 10}px;
+            height: ${5 + Math.random() * 10}px;
+            background: hsl(${330 + Math.random() * 60}, 50%, 70%);
+            left: ${isLeft ? -10 : window.innerWidth + 10}px;
+            top: ${20 + Math.random() * 60}vh;
+            z-index: 101;
+            pointer-events: none;
+            border-radius: ${Math.random() > 0.5 ? '50%' : '0'};
+          `;
+          
+          const targetX = window.innerWidth / 2 + (Math.random() - 0.5) * window.innerWidth;
+          const targetY = Math.random() * window.innerHeight;
+          
+          confetti.animate([
+            { transform: 'translate(0, 0) rotate(0deg)', opacity: 1 },
+            { transform: `translate(${targetX - (isLeft ? -10 : window.innerWidth + 10)}px, ${targetY}px) rotate(${Math.random() * 720}deg)`, opacity: 0 }
+          ], {
+            duration: 2000 + Math.random() * 1000,
+            easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+          });
+          
+          document.body.appendChild(confetti);
+          setTimeout(() => confetti.remove(), 3500);
+        }, i * 50);
+      }
+    }, 3000);
+  }
+
+</script>
+
+</body>
+</html>
