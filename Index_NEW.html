@@ -1019,6 +1019,7 @@
   let treasuresFound = 0;
   let treasures = [];
   let sparkles = [];
+  let treasureAnimationFrame;
 
   function initTreasureHunt() {
     if (treasureActive) return;
@@ -1044,34 +1045,58 @@
       treasures = [];
       sparkles = [];
       
-      // Genera 5 posizioni casuali per i tesori
-      for (let i = 0; i < 5; i++) {
-        treasures.push({
-          x: 50 + Math.random() * (canvas.width - 100),
-          y: 50 + Math.random() * (canvas.height - 100),
-          radius: 30,
+      // Genera 5 posizioni casuali per i tesori - evita sovrapposizioni
+      const minDistance = 80; // Distanza minima tra tesori
+      let attempts = 0;
+      const maxAttempts = 100;
+      
+      while (treasures.length < 5 && attempts < maxAttempts) {
+        attempts++;
+        const newTreasure = {
+          x: 60 + Math.random() * (canvas.width - 120),
+          y: 60 + Math.random() * (canvas.height - 120),
+          radius: 35,
           found: false,
-          type: ['💎', '👑', '💰', '🏆', '⭐'][i]
-        });
+          type: ['💎', '👑', '💰', '🏆', '⭐'][treasures.length],
+          pulsePhase: Math.random() * Math.PI * 2
+        };
+        
+        // Controlla distanza dagli altri tesori
+        let tooClose = false;
+        for (let t of treasures) {
+          const dist = Math.sqrt((t.x - newTreasure.x) ** 2 + (t.y - newTreasure.y) ** 2);
+          if (dist < minDistance) {
+            tooClose = true;
+            break;
+          }
+        }
+        
+        if (!tooClose) {
+          treasures.push(newTreasure);
+        }
       }
     }
 
     // Particelle scintillanti sui tesori non trovati
     function createSparkle(treasure) {
-      if (Math.random() < 0.05 && !treasure.found) {
+      if (Math.random() < 0.08 && !treasure.found && sparkles.length < 100) {
+        const angle = Math.random() * Math.PI * 2;
+        const distance = Math.random() * treasure.radius;
         sparkles.push({
-          x: treasure.x + (Math.random() - 0.5) * 40,
-          y: treasure.y + (Math.random() - 0.5) * 40,
-          life: 30,
-          size: Math.random() * 3 + 2,
-          vx: (Math.random() - 0.5) * 2,
-          vy: (Math.random() - 0.5) * 2 - 1
+          x: treasure.x + Math.cos(angle) * distance,
+          y: treasure.y + Math.sin(angle) * distance,
+          life: 40,
+          maxLife: 40,
+          size: Math.random() * 2.5 + 1.5,
+          vx: (Math.random() - 0.5) * 1.5,
+          vy: (Math.random() - 0.5) * 1.5 - 0.5,
+          hue: 45 + Math.random() * 15
         });
       }
     }
 
     function drawBackground() {
-      // Sfondo mappa pergamena
+      // Sfondo mappa pergamena con pattern più visibile
       const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
       gradient.addColorStop(0, '#E8D5B7');
       gradient.addColorStop(0.5, '#D4C4A8');
@@ -1079,87 +1104,158 @@
       ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // Texture pergamena
-      ctx.fillStyle = 'rgba(139, 115, 85, 0.03)';
-      for (let i = 0; i < 50; i++) {
-        ctx.fillRect(
-          Math.random() * canvas.width,
-          Math.random() * canvas.height,
-          Math.random() * 3,
-          Math.random() * 3
-        );
+      // Texture pergamena più evidente
+      ctx.fillStyle = 'rgba(139, 115, 85, 0.05)';
+      for (let i = 0; i < 80; i++) {
+        const x = Math.random() * canvas.width;
+        const y = Math.random() * canvas.height;
+        const size = Math.random() * 4 + 1;
+        ctx.fillRect(x, y, size, size);
       }
 
-      // Decorazioni angoli
-      ctx.font = '24px Arial';
-      ctx.fillStyle = 'rgba(139, 90, 124, 0.2)';
-      ctx.fillText('🗺️', 10, 30);
-      ctx.fillText('🗺️', canvas.width - 35, 30);
-      ctx.fillText('🗺️', 10, canvas.height - 10);
-      ctx.fillText('🗺️', canvas.width - 35, canvas.height - 10);
+      // Bordo decorativo
+      ctx.strokeStyle = 'rgba(139, 90, 124, 0.3)';
+      ctx.lineWidth = 3;
+      ctx.strokeRect(5, 5, canvas.width - 10, canvas.height - 10);
+
+      // Decorazioni angoli più grandi
+      ctx.font = 'bold 28px Arial';
+      ctx.fillStyle = 'rgba(139, 90, 124, 0.25)';
+      ctx.fillText('🗺️', 15, 35);
+      ctx.fillText('🗺️', canvas.width - 45, 35);
+      ctx.fillText('🗺️', 15, canvas.height - 10);
+      ctx.fillText('🗺️', canvas.width - 45, canvas.height - 10);
     }
 
     function drawSparkles() {
-      sparkles.forEach((s, i) => {
+      for (let i = sparkles.length - 1; i >= 0; i--) {
+        const s = sparkles[i];
         s.x += s.vx;
         s.y += s.vy;
         s.life--;
 
         if (s.life <= 0) {
           sparkles.splice(i, 1);
-          return;
+          continue;
         }
 
+        const alpha = s.life / s.maxLife;
         ctx.save();
-        ctx.globalAlpha = s.life / 30;
-        ctx.fillStyle = '#FFD700';
-        ctx.shadowBlur = 10;
-        ctx.shadowColor = '#FFD700';
+        ctx.globalAlpha = alpha;
+        
+        // Stella scintillante
+        const gradient = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, s.size * 2);
+        gradient.addColorStop(0, `hsl(${s.hue}, 100%, 80%)`);
+        gradient.addColorStop(0.5, `hsl(${s.hue}, 100%, 60%)`);
+        gradient.addColorStop(1, `hsl(${s.hue}, 100%, 40%)`);
+        
+        ctx.fillStyle = gradient;
+        ctx.shadowBlur = 8;
+        ctx.shadowColor = `hsl(${s.hue}, 100%, 60%)`;
         ctx.beginPath();
         ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
         ctx.fill();
+        
+        // Forma a stella
+        ctx.fillStyle = '#FFE870';
+        ctx.beginPath();
+        for (let j = 0; j < 5; j++) {
+          const angle = (j * Math.PI * 2) / 5 - Math.PI / 2;
+          const x = s.x + Math.cos(angle) * s.size * 1.5;
+          const y = s.y + Math.sin(angle) * s.size * 1.5;
+          if (j === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
+        ctx.closePath();
+        ctx.fill();
+        
         ctx.restore();
-      });
+      }
     }
 
     function drawTreasures() {
+      const time = Date.now();
+      
       treasures.forEach(t => {
         if (!t.found) {
           createSparkle(t);
           
-          // Pulse effect
-          const pulse = Math.sin(Date.now() / 500) * 3;
+          // Pulse effect più evidente
+          t.pulsePhase += 0.08;
+          const pulse = Math.sin(t.pulsePhase) * 5 + 3;
+          const alphaPulse = Math.sin(t.pulsePhase) * 0.15 + 0.3;
           
+          // Alone luminoso che pulsa
           ctx.save();
-          ctx.globalAlpha = 0.3;
-          ctx.fillStyle = '#FFD700';
-          ctx.shadowBlur = 20;
-          ctx.shadowColor = '#FFD700';
+          ctx.globalAlpha = alphaPulse;
+          
+          const glowGradient = ctx.createRadialGradient(t.x, t.y, 0, t.x, t.y, t.radius + pulse + 10);
+          glowGradient.addColorStop(0, 'rgba(255, 215, 0, 0.6)');
+          glowGradient.addColorStop(0.5, 'rgba(255, 215, 0, 0.3)');
+          glowGradient.addColorStop(1, 'rgba(255, 215, 0, 0)');
+          ctx.fillStyle = glowGradient;
+          
+          ctx.shadowBlur = 25;
+          ctx.shadowColor = 'rgba(255, 215, 0, 0.8)';
           ctx.beginPath();
-          ctx.arc(t.x, t.y, t.radius + pulse, 0, Math.PI * 2);
+          ctx.arc(t.x, t.y, t.radius + pulse + 5, 0, Math.PI * 2);
           ctx.fill();
+          ctx.restore();
+          
+          // Cerchio interno più visibile
+          ctx.save();
+          ctx.globalAlpha = 0.15;
+          ctx.fillStyle = '#FFD700';
+          ctx.beginPath();
+          ctx.arc(t.x, t.y, t.radius + pulse / 2, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+          
+          // Indicatore visivo aggiuntivo - X semi-trasparente
+          ctx.save();
+          ctx.strokeStyle = 'rgba(212, 168, 106, 0.4)';
+          ctx.lineWidth = 3;
+          ctx.lineCap = 'round';
+          const crossSize = 15;
+          ctx.beginPath();
+          ctx.moveTo(t.x - crossSize, t.y);
+          ctx.lineTo(t.x + crossSize, t.y);
+          ctx.moveTo(t.x, t.y - crossSize);
+          ctx.lineTo(t.x, t.y + crossSize);
+          ctx.stroke();
           ctx.restore();
         }
       });
     }
 
-    function animate() {
+    let lastFrame = 0;
+    function animate(timestamp) {
       if (!treasureActive) return;
 
-      drawBackground();
-      drawSparkles();
-      drawTreasures();
+      // Limita a 30 FPS
+      if (timestamp - lastFrame < 33) {
+        treasureAnimationFrame = requestAnimationFrame(animate);
+        return;
+      }
+      lastFrame = timestamp;
 
-      requestAnimationFrame(animate);
+      drawBackground();
+      drawTreasures();
+      drawSparkles();
+
+      treasureAnimationFrame = requestAnimationFrame(animate);
     }
 
-    animate();
+    animate(0);
 
-    // Click handler
+    // Click handler migliorato
     function handleClick(e) {
+      e.preventDefault();
       const rect = canvas.getBoundingClientRect();
       const clickX = (e.clientX || e.touches[0].clientX) - rect.left;
       const clickY = (e.clientY || e.touches[0].clientY) - rect.top;
+
+      let foundTreasure = false;
 
       treasures.forEach(t => {
         if (!t.found) {
@@ -1167,64 +1263,133 @@
           
           if (dist < t.radius) {
             t.found = true;
+            foundTreasure = true;
             treasuresFound++;
             foundCountDisplay.textContent = treasuresFound;
 
-            // Esplosione di particelle
-            for (let i = 0; i < 30; i++) {
-              const angle = (Math.PI * 2 * i) / 30;
+            // Esplosione di particelle più spettacolare
+            for (let i = 0; i < 50; i++) {
+              const angle = (Math.PI * 2 * i) / 50 + Math.random() * 0.2;
+              const speed = 2 + Math.random() * 4;
               sparkles.push({
                 x: t.x,
                 y: t.y,
-                life: 60,
-                size: Math.random() * 4 + 2,
-                vx: Math.cos(angle) * (2 + Math.random() * 3),
-                vy: Math.sin(angle) * (2 + Math.random() * 3)
+                life: 70,
+                maxLife: 70,
+                size: Math.random() * 3 + 2,
+                vx: Math.cos(angle) * speed,
+                vy: Math.sin(angle) * speed,
+                hue: 40 + Math.random() * 20
               });
             }
 
-            // Mostra emoji del tesoro
+            // Mostra emoji del tesoro con posizione corretta
             const treasureEmoji = document.createElement('div');
             treasureEmoji.textContent = t.type;
             treasureEmoji.style.cssText = `
               position: fixed;
-              left: ${e.clientX || e.touches[0].clientX}px;
-              top: ${e.clientY || e.touches[0].clientY}px;
-              font-size: 3rem;
+              left: ${rect.left + t.x}px;
+              top: ${rect.top + t.y}px;
+              font-size: 3.5rem;
               pointer-events: none;
               z-index: 1000;
-              animation: treasureFound 1s ease-out forwards;
+              animation: treasureFound 1.2s ease-out forwards;
               filter: drop-shadow(0 0 20px #FFD700);
+              transform: translate(-50%, -50%);
             `;
             document.body.appendChild(treasureEmoji);
-            setTimeout(() => treasureEmoji.remove(), 1000);
+            setTimeout(() => treasureEmoji.remove(), 1200);
+
+            // Suono di successo simulato con vibrazione (se disponibile)
+            if (navigator.vibrate) {
+              navigator.vibrate([50, 30, 50]);
+            }
 
             // Controlla vittoria
             if (treasuresFound === 5) {
+              // Celebrazione finale
+              setTimeout(() => {
+                for (let i = 0; i < 100; i++) {
+                  setTimeout(() => {
+                    const x = Math.random() * canvas.width;
+                    const y = Math.random() * canvas.height;
+                    for (let j = 0; j < 10; j++) {
+                      const angle = (Math.PI * 2 * j) / 10;
+                      sparkles.push({
+                        x: x,
+                        y: y,
+                        life: 60,
+                        maxLife: 60,
+                        size: Math.random() * 3 + 1,
+                        vx: Math.cos(angle) * (2 + Math.random() * 2),
+                        vy: Math.sin(angle) * (2 + Math.random() * 2),
+                        hue: Math.random() * 60
+                      });
+                    }
+                  }, i * 15);
+                }
+              }, 300);
+
               setTimeout(() => {
                 treasureActive = false;
+                if (treasureAnimationFrame) cancelAnimationFrame(treasureAnimationFrame);
                 goTo('lvl5b', 'lvl5c');
-              }, 1500);
+              }, 2500);
             }
           }
         }
       });
+
+      // Feedback negativo se non si trova niente
+      if (!foundTreasure) {
+        const missEffect = document.createElement('div');
+        missEffect.textContent = '❌';
+        missEffect.style.cssText = `
+          position: fixed;
+          left: ${e.clientX || e.touches[0].clientX}px;
+          top: ${e.clientY || e.touches[0].clientY}px;
+          font-size: 1.5rem;
+          pointer-events: none;
+          z-index: 999;
+          animation: missFade 0.5s ease-out forwards;
+          transform: translate(-50%, -50%);
+          opacity: 0.6;
+        `;
+        document.body.appendChild(missEffect);
+        setTimeout(() => missEffect.remove(), 500);
+      }
     }
 
     canvas.addEventListener('click', handleClick);
-    canvas.addEventListener('touchstart', (e) => {
-      e.preventDefault();
-      handleClick(e);
-    });
+    canvas.addEventListener('touchstart', handleClick);
   }
 
-  // Aggiungi animazione CSS per tesoro trovato
+  // Aggiungi animazioni CSS per tesoro trovato e miss
   const treasureStyle = document.createElement('style');
   treasureStyle.textContent = `
     @keyframes treasureFound {
-      0% { transform: translate(-50%, -50%) scale(0) rotate(0deg); opacity: 1; }
-      50% { transform: translate(-50%, -50%) scale(1.5) rotate(180deg); opacity: 1; }
-      100% { transform: translate(-50%, -80px) scale(1) rotate(360deg); opacity: 0; }
+      0% { 
+        transform: translate(-50%, -50%) scale(0) rotate(0deg); 
+        opacity: 1; 
+      }
+      40% { 
+        transform: translate(-50%, -50%) scale(1.3) rotate(180deg); 
+        opacity: 1; 
+      }
+      100% { 
+        transform: translate(-50%, -100px) scale(0.8) rotate(360deg); 
+        opacity: 0; 
+      }
+    }
+    @keyframes missFade {
+      0% { 
+        transform: translate(-50%, -50%) scale(1); 
+        opacity: 0.6; 
+      }
+      100% { 
+        transform: translate(-50%, -70px) scale(0.5); 
+        opacity: 0; 
+      }
     }
   `;
   document.head.appendChild(treasureStyle);
