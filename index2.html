@@ -13,8 +13,8 @@
     body {
       margin: 0;
       padding: 0;
-      min-height: 100vh;
-      min-height: -webkit-fill-available;
+      height: 100vh;
+      height: -webkit-fill-available;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -23,6 +23,10 @@
       color: #333;
       overflow: hidden;
       position: relative;
+    }
+    
+    html {
+      height: -webkit-fill-available;
     }
 
     .card {
@@ -35,7 +39,6 @@
       text-align: center;
       animation: pop 0.6s ease-out;
       position: relative;
-      margin: 1rem;
     }
 
     @keyframes pop {
@@ -191,7 +194,6 @@
     @media (max-height: 600px) {
       .card {
         padding: 1rem;
-        margin: 0.5rem;
       }
       
       h1 {
